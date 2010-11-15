@@ -1,0 +1,413 @@
+" vim: ft=vimperator sw=2 sts=2 fdm=marker
+
+" pre                                                                        {{{
+command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
+
+" }}}
+
+" let                                                                        {{{
+
+let mapleader = ","
+
+" pluginloader
+let g:plugin_loader_roots = "C:/root/external/vimpr/vimperator-plugins/ c:/root/home/anekos/vimperator/default/ex-plugin/"
+
+" center line
+let g:asdfghjkl_default = "true"
+let g:asdfghjkl_mode_change_key = "<Space>"
+
+" ime_controller.js
+let g:textarea_ime_mode = "inactive"
+let g:ex_ime_mode = "inactive"
+
+" pino.js
+let g:pinoOpenInterval = 1000
+let g:pinoBaseURL = "http://fastladder.com"
+
+" appendAnchor
+let g:auto_append_anchor = 1
+let g:auto_append_anchor_once = 1
+
+" multi_requester.js
+let g:multi_requester_default_sites = "alc"
+
+" hints_yank_paste.js
+let g:hints_copy_maps = "k K <nop> <nop>"
+
+" }}}
+
+" alias                                                                      {{{
+
+lazy alias e echo
+lazy alias ri reloadimage
+lazy alias vc videocontrol
+
+" }}}
+
+" set {{{
+
+set guioptions=rb
+
+" }}}
+
+" Pref (set!)                                                                {{{
+
+" アドオン/プラグイン開発用
+" set! javascript.options.strict=true
+" set! javascript.options.showInConsole=true
+" set! browser.dom.window.dump.enabled=true
+
+" ページのアクセスキーを無効化
+" set! ui.key.generalAccessKey=0
+
+" Awesomebarの補完対象にBookmarkletを追加、件数を50件に変更
+" set! browser.urlbar.filter.javascript=false
+" set! browser.urlbar.maxRichResults=50
+
+" liberator.log
+" set! extensions.liberator.loglevel=666
+
+" ポップアップを 10000 まで許可する
+" set! dom.popup_maximum=10000
+
+" textarea, input 両方で spell check を有効にする
+set! layout.spellcheckDefault=2
+set! spellchecker.dictionary=en-US
+
+" 単語選択時の右側のスペース選択を行わない
+set! layout.word_select.eat_space_to_next_word=false
+
+" タブバーを自動で隠さない
+set! browser.tabs.autoHide=false
+
+" 閉じるボタンを表示
+set! browser.tabs.closeButtons=3
+
+" IPv6 無効化
+" set! network.dns.disableIPv6=true
+
+" RAM Disk
+set! browser.cache.disk.parent_directory=R:\\firefox
+
+" undo limit
+set! browser.sessionstore.max_tabs_undo=100
+
+" 新しいタブをフォアグラウンドで開く
+set! browser.tabs.loadInBackground=false
+
+" セッションの保存間隔
+set! browser.sessionstore.interval=120000
+
+" JIT
+" set! javascript.options.jit.chrome=true
+" set! javascript.options.jit.content=true
+
+" Chika NO auto auth
+set! extensions.chaika.maru_auto_auth=false
+
+" 拡張機能のバージョンチェックを回避
+" set! extensions.checkCompatibility=false
+set! extensions.checkCompatibility.3.6=false
+" set! extensions.checkCompatibility.3.6b=false
+set! extensions.checkCompatibility.3.7=false
+set! extensions.checkCompatibility.3.7a=false
+set! extensions.checkCompatibility.3.7a5=false
+set! extensions.checkCompatibility.3.7a5pre=false
+set! extensions.checkCompatibility.3.7b=false
+set! extensions.checkCompatibility.4.0=false
+set! extensions.checkCompatibility.4.0a=false
+set! extensions.checkCompatibility.4.0b=false
+
+" キャッシュサイズ
+set! browser.cache.memory.capacity=32768
+
+" ホームページ
+set! browser.startup.homepage="about:blank"
+
+" セッションマネージャ
+set! extensions.sessionmanager.startup=2
+set! extensions.sessionmanager.resume_session="backup.session"
+
+" 以前の値、有効にすると、jquery.com に接続できなくなる。
+" set! intl.accept_languages="en-US,en,ja-JP,ja,chrome://global/locale/intl.properties"
+
+" ダウロードマネージャを表示しない
+set! browser.download.manager.showWhenStarting=false
+set! browser.download.dir='E:\temp\download\firefox'
+set! browser.download.lastDir='E:\temp\download\firefox'
+
+" UserAgent
+set! general.useragent.extra.firefox="Firefox/4.0"
+
+" OOPP 全有効にする設定
+set! dom.ipc.plugins.enabled=false
+
+" OOPP プラグイン毎の設定
+set! dom.ipc.plugins.enabled.npctrl.dll=true
+set! dom.ipc.plugins.enabled.npqtplugin.dll=true
+set! dom.ipc.plugins.enabled.npswf32.dll=true
+set! dom.ipc.plugins.enabled.nptest.dll=true
+
+" }}}
+
+" Mappings (Override)                                                        {{{
+
+" for US KBD
+noremap ; :
+noremap : ;
+
+" j/k でのスクロール幅を 1行 から 5行 に変更
+nnoremap j 5<C-e>
+nnoremap k 5<C-y>
+
+" 戻る/進む
+nnoremap <BS> <A-Left>
+
+" タブ
+nnoremap gh 1gt
+
+" Pageinfo
+nnoremap <C-g> g<C-g>
+
+" URL デコードしないようにする
+nnoremap <silent> y :<C-u>js util.copyToClipboard(buffer.URL)<CR>
+
+" 新しいウィンドウで開かないように
+nnoremap <S-CR> <C-CR>
+
+" for LDRize
+nnoremap p P
+nnoremap gop p
+nnoremap gnp P
+
+" }}}
+
+" Mappings (Local)                                                           {{{
+
+"nnoremap -urls='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' <Silent> f :xh t //*[@class="quote_source"]//a[not(@class="tumblr_blog")]|//*[@class="caption"]//a[not(@class="tumblr_blog")]<CR>
+
+" 画像のばやい - 拡縮
+nnoremap -urls '\.(jpg|png|gif)$' zi zI
+nnoremap -urls '\.(jpg|png|gif)$' zo zO
+
+" }}}
+
+" Mappings (Leader)                                                          {{{
+
+" (t) tumblr
+nnoremap <Leader>tr :<C-u>tombloo ReBlog<Space>-<Space>Tumblr
+nnoremap <Leader>tt :<C-u>tombloo<Space>
+
+" lo.js
+nnoremap <Leader>o :<C-u>lo<Space>
+nnoremap <Leader>O :<C-u>lo<Space>-w=t<Space>
+
+" twittperator.js
+nnoremap <Leader>ww :<C-u>tw<Space>
+nnoremap <Leader>wr :<C-u>tw<Space>@
+nnoremap <Leader>wR :<C-u>tw<Space>RT<Space>@
+
+nnoremap <Leader>W  :<C-u>tw!<Space>
+nnoremap <Leader>w@ :<C-u>tw!@
+nnoremap <Leader>wa :<C-u>tw!@
+nnoremap <Leader>wf :<C-u>tw!+
+nnoremap <Leader>w? :<C-u>tw!?
+nnoremap <Leader>w/ :<C-u>tw!/
+nnoremap <Leader>wi :<C-u>tw!info<Space>
+nnoremap <Leader>wt :<C-u>tw!track<Space>
+nnoremap <Leader>wT :<C-u>tw!thread<Space>
+nnoremap <Leader>wd :<C-u>tw!delete<Space>
+nnoremap <Leader>wh :<C-u>tw!home<Space>
+
+" 各コマンド呼び出し
+nnoremap <Leader>h :<C-u>hsearch<Space>
+nnoremap <Leader>H :<C-u>hcopy<Space>
+nnoremap <Leader>s :<C-u>viewSBMComments<Space>-format=id,comment<CR>
+nnoremap <Leader>g :<C-u>gmail<Space>
+nnoremap <Leader>G :<C-u>gtrans<Space>
+nnoremap <Leader>a :<C-u>applaunch<Space>
+nnoremap <Leader>p :<C-u>pino<Space>
+" nnoremap <Leader>w :<C-u>googlesidewiki<CR>
+nnoremap <Leader>R :<C-u>js<Space>Readability.enableREADABILITY({target: {id: 'readability-statusbar-icon'}})<CR>
+
+" }}}
+
+" Mappings                                                                   {{{
+
+" インサートモード時の前後移動
+inoremap <C-b> <Left>
+inoremap <C-f> <Right>
+
+" コマンドモードでの履歴たぐり
+cnoremap <C-p> <S-Tab>
+cnoremap <C-n> <Tab>
+cnoremap <C-b> <Left>
+cnoremap <C-f> <Right>
+cnoremap <C-k> <Up>
+cnoremap <C-l> <Down>
+
+" もげ
+" cnoremap <C-i> <Tab>
+
+" テスト用
+nnoremap <A-t> :<C-u>aso ~/vimperator/default/plugin/temp.js<CR>
+
+" echo and echopy
+noremap e :<C-u>echo<Space>
+noremap E :<C-u>echo!<Space>
+
+" multi requster
+nnoremap w :<C-u>mr<Space>
+nnoremap W :<C-u>mr!<Space>
+
+" <C-k> で検索ページにいくのがウザイので無効化
+nnoremap <C-k> <Nop>
+
+" INSERT モードでよくまつがえて押すので…
+inoremap <C-r> <C-i>
+
+" Undo
+nnoremap U :<C-u>undo<Space>
+
+" marker_reader
+nnoremap > :<C-u>mnext<CR>
+nnoremap < :<C-u>mprev<CR>
+
+" コピーする
+vnoremap y :<C-u>copy %SEL%<CR>
+
+" 検索
+nnoremap s :<C-u>tabopen<Space>google<Space>
+
+" タブの移動
+nnoremap <A-C-j> :<C-u>tabmove! +1<CR>
+nnoremap <A-C-k> :<C-u>tabmove! -1<CR>
+
+" <C-i> の挙動が残念なのを修正
+cnoremap <C-i> <Tab>
+cnoremap <S-C-i> <S-Tab>
+
+" for kill-menu-mode.js
+inoremap <C-n> <Down>
+inoremap <C-p> <Up>
+
+" ダウンロードマネージャ抑止
+cnoremap <C-j> <CR>
+inoremap <C-j> <CR>
+nnoremap <C-j> <CR>
+
+" zoom em all
+nnoremap ZI :<C-u>zoomall<Space>+10<CR>
+nnoremap ZO :<C-u>zoomall<Space>-10<CR>
+nnoremap ZZ :<C-u>zoomall<CR>
+
+" 直前のタブを削除
+nnoremap <Leader>dd :<C-u>js<Space>tabs.remove(tabs.alternate)<CR>
+
+" }}}
+
+" feedSomeKeys_3                                                             {{{
+
+" GMail
+lazy fmaps -u='mail\.google\.com/mail' -events=vkeydown,keypress,vkeyup j k
+lazy fmaps -u='mail\.google\.com/mail' c n p o u x s r a ? gi gs gt gd ga gc I
+lazy fmaps -u='mail\.google\.com/mail' -p=<Leader> d,# s,! e
+lazy fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' c j,n k,p n,j p,k o u x s r a ? gi gs gt gd ga gc
+lazy fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' -p=<Leader> d,# s,! e
+
+" GReader
+lazy fmaps -u='www\.google\.co\.jp/reader' -events=vkeypress j k n p m s v A r S N P X O gh ga gs gt gu u / ? J K
+
+" LDR
+lazy fmaps -u='(fastladder|livedoor)\.com/reader' j k s a p o v c i,p <Space> <S-Space> z < > e,g
+lazy fmaps -u='(fastladder|livedoor)\.com/reader' -p=<Leader><Leader> q w
+
+" Google Code
+lazy fmaps -u='http://code.google.com/p/vimperator-labs/issues/list' o j k
+lazy fmaps -u='http://code.google.com/p/vimperator-labs/issues/detail' u
+
+" Remember The Milk
+lazy fmaps -u='https?://www\.rememberthemilk\.com/home/' j k m i c ? G,g S,s Y,y M,m <Del>
+lazy fmaps -u='https?://www\.rememberthemilk\.com/home/' -p=<Leader> 1 2 3 4 f t h l d r
+
+" LDRize
+lazy fmaps J,j K,k P,p I,p
+
+" new Twitter
+" lazy fmaps -urls='^http://twitter\.com/' j k ?
+" lazy fmaps -urls='^http://twitter\.com/' -events=vkeydown n m t r gh gr gp gf gm
+" lazy fmaps -urls='^http://twitter\.com/'  -events=keydown c,<Esc>
+
+" }}}
+
+" カラースキーム                                                             {{{
+
+colorscheme theme
+colorscheme persona
+
+" colorscheme fix-plugin
+" colorscheme fix-position
+colorscheme fix-addon
+" colorscheme fix-sites
+
+colorscheme anekos
+
+" }}}
+
+" QuickMarks                                                                 {{{
+silent qmark a http://a.hatena.ne.jp/anekosp/
+silent qmark b https://mail.google.com/mail/?shva=1#buzz
+silent qmark B http://bit.ly/
+silent qmark d http://d.hatena.ne.jp/nokturnalmortum/
+silent qmark e http://userscripts.org/scripts/show/22702
+silent qmark f http://fastladder.com/reader/
+silent qmark g https://mail.google.com/mail/#mbox
+silent qmark h http://www.google.co.jp/ig
+silent qmark l http://reader.livedoor.com/reader/
+silent qmark m http://mixi.jp/home.pl
+silent qmark o https://www.ohloh.net/accounts/anekos
+silent qmark r http://www.rememberthemilk.com/
+silent qmark R http://www.rememberthemilk.com/home/anekosp/#section.tasks
+silent qmark t http://www.tumblr.com/dashboard
+silent qmark T http://anekos.tumblr.com/
+silent qmark w http://twitter.com/home
+silent qmark W http://twitter.com/#retweeted_of_mine
+silent qmark z http://vimperator.kurinton.net/plugins/
+
+
+" }}}
+
+" abbr                                                                        {{{
+
+abbrev jager          JagerMonkey
+abbrev #v             #vimperator
+abbr   pen            pentadactyl
+abbr   #pen           #pentadactyl
+
+cabbrev cr            ~/../../project/coderepos/vimp-plugin/
+cabbrev vr            ~/vimperator/default/
+
+abbrev -j .title      '"' + buffer.title.replace(/ - Death to.*グループ$/, '') + '"'
+abbrev -j .url        plugins.bitly.jmp(buffer.URL)
+abbrev -j .tu         abbreviations.get(modes.INSERT, '.title').text + ' - ' + plugins.bitly.jmp(buffer.URL)
+
+iabbrev -j .cmdline   commandline.command
+
+cabbrev -j .reply     let (e=doc.querySelector('.hentry.status'))('@' + e.getAttribute('class').match(/u-(\S+)/)[1] + '#' + e.getAttribute('id').match(/\d+/))
+cabbrev -j .stid     let (e=doc.querySelector('.hentry.status'))(e.getAttribute('id').match(/\d+/))
+cabbrev -j .rt        let (e=doc.querySelector('.hentry.status'))('RT @' + e.getAttribute('class').match(/u-(\S+)/)[1] + '#' + e.getAttribute('id').match(/\d+/) + ': ' + doc.querySelector('.entry-content').textContent.trim())
+
+cabbrev -j .amazon    let(asin=content.document.getElementById('ASIN').value,base='http://amazon.jp/',res)['dp/','o/ASIN/','gp/product/'].some(function(it)((content.document.location.pathname.indexOf(it)>1)&&(res=base+it+asin)))&&res;
+
+cabbrev -j .date      (new Date).toLocaleFormat("%Y-%m-%d")
+cabbrev -j .time      (new Date).toLocaleFormat("%H:%M:%S")
+
+" }}}
+
+" Misc                                                                       {{{
+
+" :aso の初期ディレクトリになる
+cd ~/vimperator/default/plugin/
+
+" }}}
+
