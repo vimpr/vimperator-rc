@@ -8,3 +8,11 @@ cnoremap <C-z> <C-v><C-z>
 cnoremap <C-x> <C-v><C-x>
 cnoremap <C-c> <C-v><C-c>
 cnoremap <C-v> <C-v><C-v>
+js <<EOM
+liberator.globalVariables.onclickTable={
+  'github':'//span[@class="toggle"][1]',
+  'pixiv':'//span[@class="trigger"][1]',
+  'tpprev':'//span[@class="comment_pagination_prev pagination_item"][1]',
+  'tpnext':'//span[@class="comment_pagination_next pagination_item"][1]'
+};
+EOM
