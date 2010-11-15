@@ -23,6 +23,7 @@ liberator.log('_vimperatorrc.js loading');
     ime_controller
     jscompletion
     lo
+    multi-exec
     multi_requester
     pino
     readcatlater
