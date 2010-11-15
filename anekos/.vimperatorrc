@@ -348,13 +348,14 @@ colorscheme persona
 " colorscheme fix-plugin
 " colorscheme fix-position
 colorscheme fix-addon
-" colorscheme fix-sites
+colorscheme fix-sites
 
 colorscheme anekos
 
 " }}}
 
 " QuickMarks                                                                 {{{
+
 silent qmark a http://a.hatena.ne.jp/anekosp/
 silent qmark b https://mail.google.com/mail/?shva=1#buzz
 silent qmark B http://bit.ly/
