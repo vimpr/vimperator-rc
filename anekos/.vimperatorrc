@@ -34,6 +34,21 @@ let g:multi_requester_default_sites = "alc"
 " hints_yank_paste.js
 let g:hints_copy_maps = "k K <nop> <nop>"
 
+" twittperator.js
+let g:twittperator_use_chirp = 1
+let g:twittperator_screen_name = "anekos"
+let g:twittperator_history_limit = 5000
+let g:twittperator_track_words = "vimp,vimperator,anekos,#uojp,twittperator,ank pixiv,UO_JPN,地震,clojure,liname,宇宙忍者猫団,悪魔猫将軍,LiName"
+
+let g:twittperator_plugin_urusai_namakubi = 0
+let g:twittperator_plugin_echo_tweet = 0
+let g:twittperator_plugin_reply_popup_alert = 0
+let g:twittperator_plugin_twlist_win = 0
+
+" prefix of commanded bookmarkelts
+let g:command_bookmarklet_prefix = ""
+let g:command_bookmarklet_use_sandbox = 0
+
 " }}}
 
 " alias                                                                      {{{
@@ -53,9 +68,9 @@ set guioptions=rb
 " Pref (set!)                                                                {{{
 
 " アドオン/プラグイン開発用
-" set! javascript.options.strict=true
-" set! javascript.options.showInConsole=true
-" set! browser.dom.window.dump.enabled=true
+set! javascript.options.strict=true
+set! javascript.options.showInConsole=true
+set! browser.dom.window.dump.enabled=true
 
 " ページのアクセスキーを無効化
 " set! ui.key.generalAccessKey=0
@@ -65,7 +80,7 @@ set guioptions=rb
 " set! browser.urlbar.maxRichResults=50
 
 " liberator.log
-" set! extensions.liberator.loglevel=666
+set! extensions.liberator.loglevel=666
 
 " ポップアップを 10000 まで許可する
 " set! dom.popup_maximum=10000
@@ -108,12 +123,6 @@ set! extensions.chaika.maru_auto_auth=false
 " 拡張機能のバージョンチェックを回避
 " set! extensions.checkCompatibility=false
 set! extensions.checkCompatibility.3.6=false
-" set! extensions.checkCompatibility.3.6b=false
-set! extensions.checkCompatibility.3.7=false
-set! extensions.checkCompatibility.3.7a=false
-set! extensions.checkCompatibility.3.7a5=false
-set! extensions.checkCompatibility.3.7a5pre=false
-set! extensions.checkCompatibility.3.7b=false
 set! extensions.checkCompatibility.4.0=false
 set! extensions.checkCompatibility.4.0a=false
 set! extensions.checkCompatibility.4.0b=false

@@ -33,6 +33,8 @@ liberator.log('_vimperatorrc.js loading');
     twittperator
     video-controller
     x-hint
+    memo
+    edit-vimperator-files
   </>.toString().split(/\s+/).filter(function(n) !/^!/.test(n));
   // }}}
 
@@ -196,8 +198,72 @@ liberator.log('_vimperatorrc.js loading');
 
   // }}}
 
+  // Util funcitons for commandline {{{
+  {
+    let flasher = Cc['@mozilla.org/inspector/flasher;1'].createInstance(Ci.inIFlasher);
+    flasher.color = '#FF0000';
+    flasher.thickness = 2;
+
+    let (c = modules.userContext) {
+      c.__defineGetter__("doc", function() content.document.wrappedJSObject);
+      c.__defineGetter__("win", function() content.window.wrappedJSObject);
+      c.echo = liberator.echo;
+      c.log = liberator.log;
+      c.A = Array.slice;
+      c.flash = function flash (elem, time) {
+        let count = 10;
+        let h = setInterval(
+          function () {
+            if (count === 0)
+              return clearInterval(h);
+            if (count % 2 === 0)
+              flasher.drawElementOutline(elem);
+            else
+              flasher.repaintElement(elem);
+            --count;
+          },
+          100
+        );
+        return elem;
+      };
+      c.time = function (func, self, args) {
+        let [a, r, b] = [new Date(), func.apply(self, args || []), new Date()];
+        let msg = 'time: ' + ((b.getTime() - a.getTime()) / 1000) + 'msec';
+        Application.log(msg);
+        return msg;
+      };
+    }
+  }
+  // }}}
+
+  // ScrapBook                                                                   {{{
+
+  commands.addUserCommand(
+    ['scrap'],
+    'Scrap current page by Scrapbook',
+    function () sbBrowserOverlay.execCapture(0, null, false, "urn:scrapbook:root")
+  );
+
+  // }}}
+
+  // コマンドラインの ! をトグル {{{
+  // http://twitter.com/eagletmt/status/13462934115
+  if (1) {
+    mappings.addUserMap(
+      [modes.COMMAND_LINE],
+      ['<C-x>'],
+      'toggle bang',
+      function () {
+        let [, cmd, bang, args] = commands.parseCommand(commandline.command);
+        bang = bang ? '' : '!';
+        commandline.command = cmd + bang + ' ' + args;
+      }
+    );
+  }
+  // }}}
 
 })();
+
 
 liberator.log('_vimperatorrc.js loaded');
 liberator.registerObserver('enter', function () liberator.echo('Initialized.'));
