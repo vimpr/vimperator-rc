@@ -1,4 +1,3 @@
-set editor=leafpad
 inoremap <C-a> <C-v><C-a>
 inoremap <C-z> <C-v><C-z>
 inoremap <C-x> <C-v><C-x>
