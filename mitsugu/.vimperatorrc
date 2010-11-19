@@ -14,6 +14,7 @@ liberator.globalVariables.onclickTable={
   'jamendo':'//a[@title="Add to favorites"]',
   'pixiv':'//span[@class="trigger"][1]',
   'tinamia':'//img[@id="all"]',
+  'tinamif':'//img[@id="fav"]',
   'tinamii':'//img[@id="illust"]',
   'tinamim':'//img[@id="manga"]',
   'tinamiu':'//img[@id="user_menu"]',
