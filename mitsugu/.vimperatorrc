@@ -16,4 +16,5 @@ liberator.globalVariables.onclickTable={
   'tpprev':'//span[@class="comment_pagination_prev pagination_item"][1]',
   'tpnext':'//span[@class="comment_pagination_next pagination_item"][1]'
 };
+userContext.__defineGetter__("doc", function() content.document.wrappedJSObject);
 EOM
