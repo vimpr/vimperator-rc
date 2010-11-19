@@ -11,6 +11,7 @@ cnoremap <C-v> <C-v><C-v>
 js <<EOM
 liberator.globalVariables.onclickTable={
   'github':'//span[@class="toggle"][1]',
+  'jamendo':'//a[@title="Add to favorites"]',
   'pixiv':'//span[@class="trigger"][1]',
   'tpprev':'//span[@class="comment_pagination_prev pagination_item"][1]',
   'tpnext':'//span[@class="comment_pagination_next pagination_item"][1]'
