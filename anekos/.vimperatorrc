@@ -49,6 +49,36 @@ let g:twittperator_plugin_twlist_win = 0
 let g:command_bookmarklet_prefix = ""
 let g:command_bookmarklet_use_sandbox = 0
 
+" hints-for-embedded.js
+let g:hints_for_embedded_mode = "e"
+
+" sbm_comments_viewer
+let g:sbm_comments_viewer_filter_nocomments = 1
+
+" auto_source.js
+let g:auto_source_first_time = 1
+
+" gmail-commando.js
+let g:gmail_commando_map_translate = "<Leader>t"
+let g:gmail_commando_map_translate_thread = "<Leader>T"
+let g:gmail_commando_map_fold = "<Leader>f"
+let g:gmail_commando_map_unfold = "<Leader>F"
+let g:gmail_commando_map_important = "<Leader>i"
+let g:gmail_commando_map_unimportant = "<Leader>I"
+let g:gmail_commando_label_shortcut = 1
+
+" epub-reader.js
+let g:epub_reader_map_prev = 'h <'
+let g:epub_reader_map_next = 'l >'
+
+" caret-hint.js
+let g:caret_hint_xpath = '//*' "'//img|//h1|//h2|//h3|//p|//div|//span':
+let g:caret_hint_key = ''
+
+" statstat
+let g:statstat_autorun = "true"
+let g:statstat_interval = "500"
+
 " }}}
 
 " alias                                                                      {{{
@@ -65,7 +95,7 @@ set guioptions=rb
 
 " }}}
 
-" Pref (set!)                                                                {{{
+" Pref (firefox)                                                                {{{
 
 " アドオン/プラグイン開発用
 set! javascript.options.strict=true
@@ -126,6 +156,7 @@ set! extensions.checkCompatibility.3.6=false
 set! extensions.checkCompatibility.4.0=false
 set! extensions.checkCompatibility.4.0a=false
 set! extensions.checkCompatibility.4.0b=false
+set! extensions.checkCompatibility.4.0b8=false
 
 " キャッシュサイズ
 set! browser.cache.memory.capacity=32768
@@ -157,6 +188,15 @@ set! dom.ipc.plugins.enabled.npqtplugin.dll=true
 set! dom.ipc.plugins.enabled.npswf32.dll=true
 set! dom.ipc.plugins.enabled.nptest.dll=true
 
+" 0 にすると、バックグラウンドでタブを読み込まない (デフォルトは -1)
+set! browser.sessionstore.max_concurrent_tabs=-1
+
+" 最後のタブを閉じたときに Firefox を終了しない
+set! browser.tabs.closeWindowWithLastTab=false
+
+" }}}
+
+" Pref (addons) {{{
 " }}}
 
 " Mappings (Override)                                                        {{{
@@ -354,12 +394,9 @@ lazy fmaps J,j K,k P,p I,p
 colorscheme theme
 colorscheme persona
 
-" colorscheme fix-plugin
-" colorscheme fix-position
 colorscheme fix-addon
 colorscheme fix-sites
-
-colorscheme anekos
+colorscheme fix-firefox
 
 " }}}
 
@@ -387,6 +424,23 @@ silent qmark z http://vimperator.kurinton.net/plugins/
 
 " }}}
 
+" Command                                                                     {{{
+command! backgroundimage :js let (doc = content.document) let (m = doc.defaultView.getComputedStyle(doc.body, '').backgroundImage.match(/url\s*\(\s*['"](.+)['"]\s*\)/)) m ? liberator.open(m[1], liberator.NEW_TAB) : liberator.echoerr('background image not found')
+command! cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
+command! calcpluginauthor echo let c={}; $('//tr/td[3]').evaluate().map($f.textContent()).forEach(function(n){ c[n] ? c[n]+=1 : c[n] = 1 }); c
+command! dta js DTA_ContextOverlay.findLinks(false);
+command! evernote js evernote_addSelectionToEn3(null);
+command! execlip js util.readFromClipboard().split(/\n/).filter(function(v) v.trim().length).forEach(liberator.execute)
+command! -nargs=+ sitesearch :exe ":tabopen <args> site:" + content.document.domain
+command! -nargs=1 feed subscrfl -rate=<args>
+command! ramen -nargs=1 delay -interval=<args>m namakubi できたぞ、くえよ、しぬぞ
+" 選択範囲内のリンクを開く
+command! sopen js [buffer.followLink(a) for (a in util.evaluateXPath("//a")) if (content.window.getSelection().containsNode(a, true))]
+command! sum echo let (sum=0) (util.readFromClipboard().match(/\d+/g).map(function(s) parseInt(s)).forEach(function(v) sum+=v),sum)
+" command! googlesidewiki js document.getElementById('gtbSidewiki').click()
+
+" }}}
+
 " abbr                                                                        {{{
 
 abbrev jager          JagerMonkey
@@ -411,13 +465,6 @@ cabbrev -j .amazon    let(asin=content.document.getElementById('ASIN').value,bas
 
 cabbrev -j .date      (new Date).toLocaleFormat("%Y-%m-%d")
 cabbrev -j .time      (new Date).toLocaleFormat("%H:%M:%S")
-
-" }}}
-
-" Misc                                                                       {{{
-
-" :aso の初期ディレクトリになる
-cd ~/vimperator/default/plugin/
 
 " }}}
 

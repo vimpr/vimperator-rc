@@ -11,30 +11,42 @@ liberator.log('_vimperatorrc.js loading');
     alias
     appendAnchor
     asdfghjkl
+    auto-focus-frame
+    auto-focus-frame
     auto_reload
     auto_source
     bitly
     caret-hint
     commandBookmarklet
+    copy
+    edit-vimperator-files
     feedSomeKeys_3
     gmail-commando
+    google-translator
     hints-for-embedded
     hints-yank-paste
     ime_controller
     jscompletion
     lo
+    memo
+    migemo_completion
+    migemo_hint
     multi-exec
     multi_requester
+    namakubi
+    option-selector
+    panorama
     pino
     readcatlater
     readcatlater
     sbmcommentsviewer
+    session-manager
+    statstat
     stella
+    subscldr
     twittperator
     video-controller
     x-hint
-    memo
-    edit-vimperator-files
   </>.toString().split(/\s+/).filter(function(n) !/^!/.test(n));
   // }}}
 
@@ -261,6 +273,271 @@ liberator.log('_vimperatorrc.js loading');
     );
   }
   // }}}
+
+  // kei_s さんの空気(ドメイン)を読んでマジカル・オープン {{{
+  if (1) {
+    // https://gist.github.com/600896
+    liberator.registerObserver('enter',function(){
+      let tldStr = "(?:museum|travel|aero|arpa|coop|info|jobs|name|nvus|biz|com|edu|gov|int|mil|net|org|pro|xxx|ac|ad|ae|af|ag|ai|ak|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|ct|cu|cv|cx|cy|cz|dc|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fl|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hi|hk|hm|hn|hr|ht|hu|ia|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|ks|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mi|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|nd|ne|nf|ng|nh|ni|nj|nl|nm|no|np|nr|nu|ny|nz|oh|ok|om|or|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ri|ro|ru|rw|sa|sb|sc|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tx|tz|ua|ug|uk|um|us|ut|uy|uz|va|vc|ve|vg|vi|vn|vt|vu|wa|wf|wi|ws|wv|wy|ye|yt|yu|za|zm|zw)"
+      let regexp = new RegExp("^(?:[a-zA-Z0-9-.]+\\."+tldStr+"|[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)(?:\/|$)","i");
+
+      // thanks to @anekos http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100730/1280474980
+      // See Also http://code.google.com/p/vimperator-labs/source/browse/common/content/liberator.js
+      // See Also http://code.google.com/p/vimperator-labs/source/browse/common/content/util.js
+      return;
+      plugins.libly.$U.around(
+        liberator,
+        'open',
+        function (next, args) {
+          let [urls, where, force] = args;
+          if (typeof urls == "string") {
+            if ( !/^(?:\.{0,2}|~)\//.test(urls) && /^[a-zA-Z0-9-.\/]+$/.test(urls) && !regexp.test(urls) ) {
+              args[0] = "google " + urls;
+            }
+          }
+          return next();
+        }
+      )
+    });
+  }
+  // }}}
+
+  // abbreviation 略語機能を日本語区切りで使えるようにする {{{
+  if (1) {
+    // http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100430/1272628087
+    // 一-龠 ァ-ヶ ー あ-ん 、。！？
+    let nonkw = "\\s\"'\\u4e00-\\u9fa0\\u30A1-\\u30F6\\u30FC\\u3042-\\u3093\\u3001\\u3002\\uFF01\\uFF1F";
+    let keyword = "[^" + nonkw + "]";
+    let nonkeyword = "[" + nonkw + "]";
+    let fullId = keyword + "+";
+    let endId = nonkeyword + "+" + keyword;
+    let nonId = "\\S*" + nonkeyword;
+    abbreviations._match = fullId + "|" + endId + "|" + nonId;
+  }
+  // }}}
+
+  // Copy.js                                                                     {{{
+  function shortAmazon () {
+    var asin = content.document.getElementById('ASIN').value;
+    var base = 'http://amazon.jp/';
+    var dirs = ['dp/', 'o/ASIN/', 'gp/product/'];
+
+    if (asin) {
+      for each (var it in dirs) {
+        if (content.document.location.pathname.indexOf(it) != 1)
+          return base + it + asin;
+      }
+    }
+  }
+
+  // for copy.js
+  liberator.globalVariables.copy_templates = [
+    {
+      label: 'bookmark',
+      value: "[%TITLE%]\n%URL%\n"
+    },
+    {
+      label: 'titleAndURL',
+      value: '%TITLE%\n%URL%\n'
+    },
+    {
+      label: 'title',
+      value: '%TITLE%'
+    },
+    {
+      label: 'hatena',
+      value: '[%URL%:title=%TITLE%]'
+    },
+    {
+      label: 'hatenacite',
+      value: '>%URL%:title=%TITLE%>\n%SEL%\n<<'
+    },
+    {
+      label: 'markdown',
+      value: '[%SEL%](%URL% "%TITLE%")'
+    },
+    {
+      label: 'htmlblockquote',
+      value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>'
+    },
+    {
+      label: 'amazon',
+      value: 'Short Amazon',
+      custom: shortAmazon
+    },
+    {
+      label: 'ASIN',
+      value: 'copy ASIN code from Amazon for Hatena',
+      custom: function() ('asin:'+content.document.getElementById('ASIN').value+':detail')
+    },
+    {
+      label: 'domain',
+      value: 'domain',
+      custom: function () content.document.domain.replace(/^[^.]+\.([^.]+\.([^.]{3}|[^.]{2}\.[^.]{2}))$/, '$1') },
+    {
+      label: 'nico',
+      value: 'for hatena diary',
+      custom: function () ('[niconico:'+buffer.URL.match(/[a-z]{2,3}\d+/)+']')
+    },
+    {
+      label: 'genkyu',
+      value: '><blockquote cite="%URL%" title="%TITLE%"><\n%SEL%\n></blockquote><'
+    },
+    {
+      label: 'hgenkyu',
+      value: '><blockquote cite="%URL%" title="%TITLE%"><\n%HTMLSEL%\n></blockquote><'
+    },
+    {
+      label: 'quoteWithTitleAndURL',
+      value: '\u3010%TITLE%\u3011\n%SEL%\n%URL%'
+    },
+    {
+      label: 'crchangeset',
+      value: 'http://coderepos.org/share/changeset/'
+    },
+    {
+      label: 'gogle',
+      value: 'gogle',
+      custom: function () JSON.parse(util.httpGet("http://ggl-shortener.appspot.com/?url="+encodeURIComponent(buffer.URL)).responseText).short_url
+    },
+    {
+      label: 'link',
+      value: '<a href="%URL%">%TITLE%</a>'
+    }
+  ];
+
+  // }}}
+
+  // statstat {{{
+  if (1) {
+    liberator.globalVariables.statstat_expression =
+      function() {
+        if (liberator.mode == modes.INSERT)
+          return liberator.focus.value.length;
+        let [, cmd, ,as] = commands.parseCommand(commandline.command);
+        if (/^tw$/(cmd))
+          return plugins.twittperator.Utils.parseSayArg(as).text.length;
+        return as ? as.length : '-';
+      }
+  } // }}}
+
+  // mouse over hint mode                                                        {{{
+
+  if (1) {
+    hints.addMode(
+      'm',
+      'mouse over',
+      function (elem, count) {
+        let evt = elem.ownerDocument.createEvent('MouseEvents');
+        evt.initMouseEvent(
+          'mouseover',
+          true, true,
+          elem.ownerDocument.defaultView,
+          0, 0, 0, 0, 0,
+          false, false, false, false, 0, null
+        );
+        elem.dispatchEvent(evt);
+      },
+      function () options.get('hinttags').get()
+    );
+  } // }}}
+
+  // numeronym {{{
+  commands.addUserCommand(
+    ['numeronym', 'numerorym', 'lotion', 'munemomym'],
+    'Nume Nume',
+    function (args) liberator.echo(let ([,a,b,c] = /^(.)(.+)(.)$/(args.literalArg.trim())) (a+b.length+c)),
+    {
+      literal: 0
+    },
+    true
+  );
+  // }}}
+
+  // Kill Menu Mode {{{
+  // imap されていないキーで無視したいものは、inoremap <C-n> <nop> などとしておく
+  if (1) {
+    window.addEventListener(
+      'keypress',
+      function (event) {
+        function killEvent ()
+          (event.preventDefault(), event.stopPropagation());
+
+        if (liberator.mode === modes.COMMAND_LINE && modes.extended === modes.HINTS) {
+          let key = events.toString(event);
+          if (/^<[CA]/(key))
+            killEvent();
+        }
+
+        if (liberator.mode === modes.INSERT && modes.extended === modes.MENU) {
+          let key = events.toString(event);
+          if (key == '<Space>')
+            return;
+          let map = mappings.get(modes.INSERT, events.toString(event));
+          if (map) {
+            killEvent();
+            map.execute();
+          }
+        }
+      },
+      false
+    );
+  }
+
+  // }}}
+
+  // Readability {{{
+  if (0) {
+    let readability = function () { /// {{{
+      liberator.open("javascript:(function(){readStyle='style-apertura';readSize='size-large';readMargin='margin-narrow';_readability_script=document.createElement('SCRIPT');_readability_script.type='text/javascript';_readability_script.src='http://lab.arc90.com/experiments/readability/js/readability.js?x='+(Math.random());document.getElementsByTagName('head')[0].appendChild(_readability_script);_readability_css=document.createElement('LINK');_readability_css.rel='stylesheet';_readability_css.href='http://lab.arc90.com/experiments/readability/css/readability.css';_readability_css.type='text/css';_readability_css.media='all';document.getElementsByTagName('head')[0].appendChild(_readability_css);_readability_print_css=document.createElement('LINK');_readability_print_css.rel='stylesheet';_readability_print_css.href='http://lab.arc90.com/experiments/readability/css/readability-print.css';_readability_print_css.media='print';_readability_print_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_print_css);})();");
+    }; // }}}
+
+    commands.addUserCommand(
+      'readability',
+      'readability bookmarklet',
+      function () {
+        readability();
+      },
+      {}
+    );
+  }
+  // }}}
+
+  // ;F 連ヒントをバッファする {{{
+  if (1) {
+    liberator.registerObserver(
+      'enter',
+      function () {
+        let scheduled = [];
+        plugins.libly.$U.around(
+          events,
+          'onEscape',
+          function (next) {
+            try {
+              if (scheduled.length)
+                scheduled.forEach(function (elem) buffer.followLink(elem, liberator.NEW_BACKGROUND_TAB));
+            } finally {
+              scheduled = [];
+              return next();
+            }
+          }
+        );
+        hints._hintModes['F'].action = function (elem) (liberator.log(elem),scheduled.push(elem), hints.show("F"));
+      }
+    );
+  }
+  // }}}
+
+  if (1) { // {{{ ブックマークキーワードを展開
+    mappings.addUserMap(
+      [modes.COMMAND_LINE],
+      ['<C-o>'],
+      'Expand bookmark keyword.',
+      function ()
+        let ([, cmd, bang, args] = commands.parseCommand(commandline.command))
+          (commandline.command = commandline.command.replace(args, util.stringToURLArray(args).join(', ')))
+    );
+  } // }}}
 
 })();
 
