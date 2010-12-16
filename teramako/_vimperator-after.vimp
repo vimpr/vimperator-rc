@@ -1,0 +1,23 @@
+
+" feedSomeKeys_3.js settings
+fmaps -u='mail\.google\.com/mail' c / j k n p o u e x s r a # [ ] ? gi gs gt gd ga gc
+fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' c / j,n k,p n,j p,k o u e x s r a # [ ] ? gi gs gt gd ga gc
+fmaps -u='www\.google\.co\.jp/reader' -events=vkeypress j k n p m s v A r S N P X O gh ga gs gt gu u / ? J K
+fmaps -u='(fastladder|livedoor)\.com/reader' j k s a p o v c i,p <Space> <S-Space> z B,b < > q w e,g
+fmaps -u='https?://www\.rememberthemilk\.com/home/' j k m i c t ? d F,f G,g S,s L,l Y,y H,h M,m <Del> <C-S-Left> <C-S-Right>
+fmaps -u='http://code.google.com/p/vimperator-labs/issues/list' o j k
+fmaps -u='http://code.google.com/p/vimperator-labs/issues/detail' u
+fmaps -u='http://femo.jp/' -events vkeydown c l L J,j K,k p E,e s a T,t
+
+" panorama.js settings
+js <<EOM
+(function() {
+  if (liberator.version.indexOf("3.0") != 0) return;
+  const cmds = [ "mkgroup", "switchgroup", "stashtogroup", "rmgroup", "pulltab", "settitle" ];
+  plugins.panorama.subCmds.forEach(function(command) {
+    if (cmds.indexOf(command.name) >= 0)
+      commands._addCommand(command, true);
+  });
+})();
+EOM
+
