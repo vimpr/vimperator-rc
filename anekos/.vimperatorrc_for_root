@@ -1,0 +1,89 @@
+" vim: syntax=vimperator :
+"
+" プロファイル毎に runtimepath を設定したりするよ
+" (for Vimperator 2.x - 3.0pre)
+"
+" .vimperatorrc (this file)
+"     vimperator/
+"         default/
+"             .vimperatorrc
+"             .vimperatorrc.local
+"             .vimperatorrc.js
+"             .vimperatorrc.local.js
+"             .vimperatorrc.after
+"             .vimperatorrc.after.js
+"             plugin/
+"             color/
+"         development/
+"             .vimperatorrc
+"             plugin/
+"             color/
+"         ....
+
+
+js << EOM
+if (!liberator.globalVariables.anekos_rc_loaded) {
+  ////////////////////////////////////////////////////////////////////////////////
+  // USER SETTING
+  ////////////////////////////////////////////////////////////////////////////////
+
+  // default directory name
+  let defaultName = 'default';
+
+  // runtime path
+  let runtimepath;// = '~/.vimperator';
+
+  // rc filenames (n = normal, a = after)
+  let nrcs  = [
+    '.vimperatorrc', '_vimperatorrc',
+    '.vimperatorrc.js', '_vimperatorrc.js',
+    '.vimperatorrc.local', '_vimperatorrc.local',
+    '.vimperatorrc.local.js', '_vimperatorrc.local.js'
+  ];
+  let arcs = nrcs.map(function (it) it.replace(/\.js|$/, function (tail) ('.after' + tail)));
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // MAIN
+  ////////////////////////////////////////////////////////////////////////////////
+
+  try {
+    let joinPaths = function () Array.slice(arguments).join('/');
+
+    let sourceFromDirs = function (paths, dirs) {
+      for (let [,dir] in Iterator(dirs)) {
+        for (let [,path] in Iterator(paths)) {
+          let file = io.File(joinPaths(dir, path));
+          if (file.exists() && file.isFile() && file.isReadable())
+            io.source(file.path, false);
+        }
+      }
+    };
+
+    let profileName = (function ()
+                        Cc['@mozilla.org/file/directory_service;1']
+                                            .getService(Ci.nsIProperties)
+                                            .get('ProfD', Ci.nsIFile)
+                                            .path
+                                            .replace(/.*[\\\/]/, '')
+                                            .replace(/.+?\./, ''))();
+
+    let option = runtimepath || options.get('runtimepath');
+    let rps = option.get().replace(/,$/, '').split(',');
+
+    let newrps = rps.map(function (path)
+                          let (newpath = path + '/' + profileName)
+                            io.File(newpath).exists() ? newpath : path + '/' + defaultName);
+
+    option.set(newrps.join(','));
+
+    sourceFromDirs(nrcs, newrps);
+
+    autocommands.add('VimperatorEnter', /.*/, function () sourceFromDirs(arcs, newrps));
+
+  } catch (e) {
+    alert(e);
+  }
+
+  liberator.globalVariables.anekos_rc_loaded = true;
+}
+EOM
