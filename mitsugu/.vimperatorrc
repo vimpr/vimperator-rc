@@ -25,4 +25,13 @@ liberator.globalVariables.onclickTable={
   'tpnext':'//span[@class="comment_pagination_next pagination_item"][1]'
 };
 userContext.__defineGetter__("doc", function() content.document.wrappedJSObject);
+(function(){
+	commands.addUserCommand(
+    ['flashblock'],
+    'Toggle Iste White List of Flashblock.',
+		function(){
+      Flashblock.toggleSiteWhitelisted();
+		}
+	);
+})();
 EOM
