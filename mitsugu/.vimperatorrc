@@ -30,7 +30,7 @@ userContext.__defineGetter__("doc", function() content.document.wrappedJSObject)
     ['flashblock'],
     'Toggle Iste White List of Flashblock.',
 		function(){
-      Flashblock.toggleSiteWhitelisted();
+      if(Flashblock!=null) Flashblock.toggleSiteWhitelisted();
 		}
 	);
 })();
