@@ -34,4 +34,18 @@ userContext.__defineGetter__("doc", function() content.document.wrappedJSObject)
 		}
 	);
 })();
+(function(){
+	commands.addUserCommand(
+    ['closefind'],
+    'Close findbar',
+		function(){
+      let bar=document.getElementById('FindToolbar');
+      if(bar.hidden){
+        gFindBar.open();
+      } else {
+        gFindBar.close();
+      }
+		}
+	);
+})();
 EOM
