@@ -38,7 +38,6 @@ let g:hints_copy_maps = "k K <nop> <nop>"
 let g:twittperator_use_chirp = 1
 let g:twittperator_screen_name = "anekos"
 let g:twittperator_history_limit = 5000
-let g:twittperator_track_words = "vimp,vimperator,anekos,#uojp,twittperator,ank pixiv,UO_JPN,地震,clojure,liname,宇宙忍者猫団,悪魔猫将軍,LiName"
 
 let g:twittperator_plugin_urusai_namakubi = 0
 let g:twittperator_plugin_echo_tweet = 0
@@ -79,6 +78,9 @@ let g:caret_hint_key = ''
 let g:statstat_autorun = "true"
 let g:statstat_interval = "500"
 
+" sessoin-manager
+let g:session_manager_ignore_auto = 1
+
 " }}}
 
 " alias                                                                      {{{
@@ -86,12 +88,16 @@ let g:statstat_interval = "500"
 lazy alias e echo
 lazy alias ri reloadimage
 lazy alias vc videocontrol
+lazy alias p panorama
 
 " }}}
 
 " set {{{
 
-set guioptions=rb
+set scrollbars
+set notabnumbers
+lazy set gui=addons,tabs,menu
+lazy js document.getElementById('toolbar-menubar').collapsed = true
 
 " }}}
 
@@ -141,22 +147,15 @@ set! browser.sessionstore.max_tabs_undo=100
 set! browser.tabs.loadInBackground=false
 
 " セッションの保存間隔
-set! browser.sessionstore.interval=120000
+" set! browser.sessionstore.interval=120000
 
 " JIT
 " set! javascript.options.jit.chrome=true
 " set! javascript.options.jit.content=true
 
-" Chika NO auto auth
-set! extensions.chaika.maru_auto_auth=false
-
 " 拡張機能のバージョンチェックを回避
 " set! extensions.checkCompatibility=false
-set! extensions.checkCompatibility.3.6=false
-set! extensions.checkCompatibility.4.0=false
-set! extensions.checkCompatibility.4.0a=false
 set! extensions.checkCompatibility.4.0b=false
-set! extensions.checkCompatibility.4.0b8=false
 
 " キャッシュサイズ
 set! browser.cache.memory.capacity=32768
@@ -189,7 +188,7 @@ set! dom.ipc.plugins.enabled.npswf32.dll=true
 set! dom.ipc.plugins.enabled.nptest.dll=true
 
 " 0 にすると、バックグラウンドでタブを読み込まない (デフォルトは -1)
-set! browser.sessionstore.max_concurrent_tabs=-1
+" set! browser.sessionstore.max_concurrent_tabs=3
 
 " 最後のタブを閉じたときに Firefox を終了しない
 set! browser.tabs.closeWindowWithLastTab=false
@@ -197,6 +196,9 @@ set! browser.tabs.closeWindowWithLastTab=false
 " }}}
 
 " Pref (addons) {{{
+
+set! extensions.scriptish.useDefaultLocale=true
+
 " }}}
 
 " Mappings (Override)                                                        {{{
@@ -256,6 +258,9 @@ nnoremap <Leader>ww :<C-u>tw<Space>
 nnoremap <Leader>wr :<C-u>tw<Space>@
 nnoremap <Leader>wR :<C-u>tw<Space>RT<Space>@
 
+" panorama.js
+nnoremap <Leader>q :panorama<Space>
+
 nnoremap <Leader>W  :<C-u>tw!<Space>
 nnoremap <Leader>w@ :<C-u>tw!@
 nnoremap <Leader>wa :<C-u>tw!@
@@ -271,13 +276,15 @@ nnoremap <Leader>wh :<C-u>tw!home<Space>
 " 各コマンド呼び出し
 nnoremap <Leader>h :<C-u>hsearch<Space>
 nnoremap <Leader>H :<C-u>hcopy<Space>
-nnoremap <Leader>s :<C-u>viewSBMComments<Space>-format=id,comment<CR>
+nnoremap <Leader>s :<C-u>viewSBMComments -type htdl -format=id,comment<CR>
 nnoremap <Leader>g :<C-u>gmail<Space>
 nnoremap <Leader>G :<C-u>gtrans<Space>
 nnoremap <Leader>a :<C-u>applaunch<Space>
 nnoremap <Leader>p :<C-u>pino<Space>
-" nnoremap <Leader>w :<C-u>googlesidewiki<CR>
 nnoremap <Leader>R :<C-u>js<Space>Readability.enableREADABILITY({target: {id: 'readability-statusbar-icon'}})<CR>
+
+" vim の設定ぽく
+nnoremap <Leader>b :<C-u>buffer<Space>
 
 " }}}
 
@@ -326,7 +333,7 @@ nnoremap < :<C-u>mprev<CR>
 vnoremap y :<C-u>copy %SEL%<CR>
 
 " 検索
-nnoremap s :<C-u>tabopen<Space>google<Space>
+nnoremap s :<C-u>tabopen<Space>,
 
 " タブの移動
 nnoremap <A-C-j> :<C-u>tabmove! +1<CR>
@@ -369,7 +376,7 @@ lazy fmaps -u='www\.google\.co\.jp/reader' -events=vkeypress j k n p m s v A r S
 
 " LDR
 lazy fmaps -u='(fastladder|livedoor)\.com/reader' j k s a p o v c i,p <Space> <S-Space> z < > e,g
-lazy fmaps -u='(fastladder|livedoor)\.com/reader' -p=<Leader><Leader> q w
+lazy fmaps -u='(fastladder|livedoor)\.com/reader' q w
 
 " Google Code
 lazy fmaps -u='http://code.google.com/p/vimperator-labs/issues/list' o j k
@@ -414,6 +421,7 @@ silent qmark l http://reader.livedoor.com/reader/
 silent qmark m http://mixi.jp/home.pl
 silent qmark o https://www.ohloh.net/accounts/anekos
 silent qmark r http://www.rememberthemilk.com/
+silent qmark s http://springpadit.com/springpad/#home
 silent qmark R http://www.rememberthemilk.com/home/anekosp/#section.tasks
 silent qmark t http://www.tumblr.com/dashboard
 silent qmark T http://anekos.tumblr.com/
@@ -438,33 +446,38 @@ command! ramen -nargs=1 delay -interval=<args>m namakubi できたぞ、くえ�
 command! sopen js [buffer.followLink(a) for (a in util.evaluateXPath("//a")) if (content.window.getSelection().containsNode(a, true))]
 command! sum echo let (sum=0) (util.readFromClipboard().match(/\d+/g).map(function(s) parseInt(s)).forEach(function(v) sum+=v),sum)
 " command! googlesidewiki js document.getElementById('gtbSidewiki').click()
+command! webcon :emenu Tools.Web Console
+" Fox To Phone
+command! pushandroid js sendtophone.onToolbarButtonCommand()
+command! gpum statusbarpanel gpum-statusbar-panel
 
 " }}}
 
-" abbr                                                                        {{{
+" Abbr                                                                        {{{
 
-abbrev jager          JagerMonkey
-abbrev #v             #vimperator
-abbr   pen            pentadactyl
-abbr   #pen           #pentadactyl
+abbr jager          JagerMonkey
+abbr #v             #vimperator
+abbr pen            pentadactyl
+abbr #pen           #pentadactyl
 
-cabbrev cr            ~/../../project/coderepos/vimp-plugin/
-cabbrev vr            ~/vimperator/default/
+cabbr cr            ~/../../project/coderepos/vimp-plugin/
+cabbr vr            ~/vimperator/default/
 
-abbrev -j .title      '"' + buffer.title.replace(/ - Death to.*グループ$/, '') + '"'
-abbrev -j .url        plugins.bitly.jmp(buffer.URL)
-abbrev -j .tu         abbreviations.get(modes.INSERT, '.title').text + ' - ' + plugins.bitly.jmp(buffer.URL)
+abbr -j .title      '"' + buffer.title.replace(/ - Death to.*グループ$/, '') + '"'
+abbr -j .url        plugins.bitly.jmp(buffer.URL)
+abbr -j .tu         abbreviations.get(modes.INSERT, '.title').text + ' - ' + plugins.bitly.jmp(buffer.URL)
+abbr -j .impala     plugins.haneru.getc(buffer.URL)[0]
 
-iabbrev -j .cmdline   commandline.command
+iabbr -j .cmdline   commandline.command
 
-cabbrev -j .reply     let (e=doc.querySelector('.hentry.status'))('@' + e.getAttribute('class').match(/u-(\S+)/)[1] + '#' + e.getAttribute('id').match(/\d+/))
-cabbrev -j .stid     let (e=doc.querySelector('.hentry.status'))(e.getAttribute('id').match(/\d+/))
-cabbrev -j .rt        let (e=doc.querySelector('.hentry.status'))('RT @' + e.getAttribute('class').match(/u-(\S+)/)[1] + '#' + e.getAttribute('id').match(/\d+/) + ': ' + doc.querySelector('.entry-content').textContent.trim())
+cabbr -j .reply     let (e=doc.querySelector('.hentry.status'))('@' + e.getAttribute('class').match(/u-(\S+)/)[1] + '#' + e.getAttribute('id').match(/\d+/))
+cabbr -j .stid     let (e=doc.querySelector('.hentry.status'))(e.getAttribute('id').match(/\d+/))
+cabbr -j .rt        let (e=doc.querySelector('.hentry.status'))('RT @' + e.getAttribute('class').match(/u-(\S+)/)[1] + '#' + e.getAttribute('id').match(/\d+/) + ': ' + doc.querySelector('.entry-content').textContent.trim())
 
-cabbrev -j .amazon    let(asin=content.document.getElementById('ASIN').value,base='http://amazon.jp/',res)['dp/','o/ASIN/','gp/product/'].some(function(it)((content.document.location.pathname.indexOf(it)>1)&&(res=base+it+asin)))&&res;
+cabbr -j .amazon    let(asin=content.document.getElementById('ASIN').value,base='http://amazon.jp/',res)['dp/','o/ASIN/','gp/product/'].some(function(it)((content.document.location.pathname.indexOf(it)>1)&&(res=base+it+asin)))&&res;
 
-cabbrev -j .date      (new Date).toLocaleFormat("%Y-%m-%d")
-cabbrev -j .time      (new Date).toLocaleFormat("%H:%M:%S")
+cabbr -j .date      (new Date).toLocaleFormat("%Y-%m-%d")
+cabbr -j .time      (new Date).toLocaleFormat("%H:%M:%S")
 
 " }}}
 

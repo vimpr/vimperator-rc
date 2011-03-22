@@ -1,4 +1,4 @@
-// vim:sw=2 ts=2 et si fdm=marker:
+// vim:sw=2 ts=2 et si fdm=marker ft=javascript:
 
 liberator.log('_vimperatorrc.js loading');
 
@@ -10,9 +10,9 @@ liberator.log('_vimperatorrc.js loading');
     _smooziee
     alias
     appendAnchor
-    asdfghjkl
+    !asdfghjkl
     auto-focus-frame
-    auto-focus-frame
+    auto_detect_link
     auto_reload
     auto_source
     bitly
@@ -23,10 +23,9 @@ liberator.log('_vimperatorrc.js loading');
     feedSomeKeys_3
     gmail-commando
     google-translator
+    hatenaStar
     hints-for-embedded
     hints-yank-paste
-    ime_controller
-    jscompletion
     lo
     memo
     migemo_completion
@@ -35,18 +34,23 @@ liberator.log('_vimperatorrc.js loading');
     multi_requester
     namakubi
     option-selector
-    panorama
     pino
     readcatlater
-    readcatlater
     sbmcommentsviewer
-    session-manager
     statstat
+    statusbar_panel
     stella
     subscldr
+    tabsort
+    tombloo
+    hint-tombloo
+    umihara
+    usi
     twittperator
     video-controller
     x-hint
+    zoom-em-all
+    &#x8DF3;
   </>.toString().split(/\s+/).filter(function(n) !/^!/.test(n));
   // }}}
 
@@ -412,12 +416,16 @@ liberator.log('_vimperatorrc.js loading');
   if (1) {
     liberator.globalVariables.statstat_expression =
       function() {
-        if (liberator.mode == modes.INSERT)
-          return liberator.focus.value.length;
-        let [, cmd, ,as] = commands.parseCommand(commandline.command);
-        if (/^tw$/(cmd))
-          return plugins.twittperator.Utils.parseSayArg(as).text.length;
-        return as ? as.length : '-';
+        try {
+          if (liberator.mode == modes.INSERT)
+            return liberator.focus.value.length;
+          let [, cmd, ,as] = commands.parseCommand(commandline.command);
+          if (/^tw$/(cmd))
+            return plugins.twittperator.Utils.parseSayArg(as).text.length;
+          return as ? as.length : '-';
+        } catch (e) {
+          return 'error';
+        }
       }
   } // }}}
 
@@ -486,6 +494,33 @@ liberator.log('_vimperatorrc.js loading');
 
   // }}}
 
+  // auto_detect_link.js                                                         {{{
+
+  liberator.globalVariables.autoDetectLink = {
+    nextPatterns: [
+      //[NnＮｎ][EeＥｅ][XxＸｘ][TtＴｔ]/,
+      /[Nn\uff2e\uff4e][Ee\uff25\uff45][Xx\uff38\uff58][Tt\uff34\uff54]/,
+      //[FfＦｆ](?:[OoＯｏ][RrＲｒ])?[WwＷｗ](?:[AaＡａ][RrＲｒ])?[DdＤｄ]/,
+      /[Ff\uff26\uff46](?:[Oo\uff2f\uff4f][Rr\uff32\uff52])?[Ww\uff37\uff57](?:[Aa\uff21\uff41][Rr\uff32\uff52])?[Dd\uff24\uff44]/,
+      //^\s*(?:次|つぎ)[への]/, /つづく|続/, /(?:[^目]|^)次|つぎ/, /進む/,
+      /^\s*(?:\u6B21|\u3064\u304E)[\u3078\u306E]/, /\u3064\u3065\u304F|\u7D9A/, /(?:[^\u76EE]|^)\u6B21|\u3064\u304E/, /\u9032\u3080/,
+      //^\s*>\s*$/, />+|≫/
+      /^\s*>\s*$/, />+|\u226b/
+    ],
+    backPatterns: [
+      //[BbＢｂ][AaＡａ][CcＣｃ][KkＫｋ]/, /[PpＰｐ][RrＲｒ][EeＥｅ][VvＶｖ]/,
+      /[Bb\uff22\uff42][Aa\uff21\uff41][Cc\uff23\uff43][Kk\uff2b\uff4b]/, /[Pp\uff30\uff50][Rr\uff32\uff52][Ee\uff25\uff45][Vv\uff36\uff56]/,
+      //^\s*前[への]/, /前/, /戻る/,
+      /^\s*\u524d[\u3078\u306e]/, /\u524d/, /\u623b\u308b/,
+      //^\s*<\s*$/, /<+|≪/
+      /^\s*<\s*$/, /<+|\u226a/
+    ],
+    force: true,
+    clickButton: true,
+  };
+
+  // }}}
+
   // Readability {{{
   if (0) {
     let readability = function () { /// {{{
@@ -528,7 +563,8 @@ liberator.log('_vimperatorrc.js loading');
   }
   // }}}
 
-  if (1) { // {{{ ブックマークキーワードを展開
+  //ブックマークキーワードを展開 {{{
+  if (1) {
     mappings.addUserMap(
       [modes.COMMAND_LINE],
       ['<C-o>'],
@@ -538,6 +574,77 @@ liberator.log('_vimperatorrc.js loading');
           (commandline.command = commandline.command.replace(args, util.stringToURLArray(args).join(', ')))
     );
   } // }}}
+
+  // Download Toolbar のクリア {{{
+  if (1) {
+    commands.addUserCommand(
+      ['dltbc'],
+      'Clear download toolbar',
+      function () {
+        document.querySelector('#downbarClearButton').click();
+      },
+      {},
+      true
+    );
+  } // }}}
+
+  // 上のウィンドウにフォーカスを移動 {{{
+  if (1) {
+    //let map = mappings.getDefault(modes.NORMAL, '<ESC>');
+    mappings.addUserMap(
+      [modes.NORMAL],
+      ['<ESC>'],
+      'Focus to parent window',
+      function() {
+        if (modes.passNextKey || modes.passAllKeys)
+          return events.onEscape();
+        Buffer.focusedWindow = Buffer.focusedWindow.parent;
+      },
+      {}
+    );
+  } // }}}
+
+  // コマンドラインをエディタで編集 {{{
+  if (1) {
+    mappings.addUserMap(
+      [modes.COMMAND_LINE],
+      ['<C-i>'],
+      'Edit commandline by external editor',
+      function () {
+        io.withTempFiles(
+          function (file) {
+            file.write(commandline.command);
+            editor.editFileExternally(file.path);
+            commandline.open(":", file.read(), modes.EX);
+            return true;
+          }
+        );
+      }
+    );
+  } // }}}
+
+  // サイト内検索 {{{
+  if (1) {
+    commands.addUserCommand(
+      ['sitesearch'],
+      'Search in this site',
+      function (args) {
+        liberator.open(
+          'http://www.google.com/search?q=' +
+            encodeURIComponent(args.literalArg) +
+            '+site%3A' +
+            window.content.location.hostname,
+          liberator.NEW_TAB
+        );
+      },
+      {
+        completer: function (context) completion.url(context, 'S'),
+        literal: 0,
+      },
+      true
+    );
+  } // }}}
+
 
 })();
 
