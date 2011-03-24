@@ -1,0 +1,25 @@
+
+"js <<EOM
+"  document.getElementById('addon-bar').collapsed = false
+"  let (
+"    sl = document.getElementById('liberator-statusline'),
+"    sb = document.getElementById('status-bar'),
+"    ab = document.getElementById('addon-bar')
+"  ) {
+"    let spring = document.createElement('toolbarspring');
+"    spring.setAttribute('id', 'anekos-spring');
+"    ab.insertBefore(spring, ab.firstChild)
+"    ab.insertBefore(sl, ab.firstChild)
+"  }
+"EOM
+
+" サイドバーを右端に移動する
+js <<EOM
+  let (b = document.getElementById('browser'), sbb = document.getElementById('sidebar-box'),
+  sp = document.getElementById('sidebar-splitter')) {
+    b.removeChild(sbb);
+    b.removeChild(sp);
+    b.appendChild(sp);
+    b.appendChild(sbb);
+  }
+EOM

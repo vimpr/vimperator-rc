@@ -1,0 +1,12 @@
+
+style -name addons chrome://* <<EOM
+  .alltabs-button, .new-tab-button, .tabview-button {
+    display: none !important;
+  }
+EOM
+
+js <<EOM
+  window.document.getElementById('tabview-button').collapsed = true
+  window.document.getElementById('alltabs-button').collapsed = true
+EOM
+
