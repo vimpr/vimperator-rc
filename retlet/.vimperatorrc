@@ -3,10 +3,10 @@
 
 " prefs
 " ======================================================================
-" $B%]%C%W%"%C%W5v2D?t$r3HD%(B cf.http://la.ma.la/blog/diary_200611171115.htm
+" ポップアップ許可数を拡張 cf.http://la.ma.la/blog/diary_200611171115.htm
 set! dom.popup_maximum=9999
 
-" Gmail/LDR/Fastladder/$B$O$F%V$G$O?75,%?%V$r%P%C%/%0%i%&%s%I$G3+$/(B
+" Gmail/LDR/Fastladder/はてブでは新規タブをバックグラウンドで開く
 autocmd LocationChange '^(?!https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide))))' :set! browser.tabs.loadDivertedInBackground=false
 autocmd LocationChange '^https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide)))' :set! browser.tabs.loadDivertedInBackground=true
 
@@ -18,72 +18,72 @@ set! refcontrol.actions="@DEFAULT=@NORMAL ameba.jp= dtiblog.com=@FORGE fc2.com= 
 " GUI
 set gui=none
 
-" $B%R%s%H$NJ8;zNs$r%"%k%U%!%Y%C%H$K(B
+" ヒントの文字列をアルファベットに
 set hintchars=hjklasdfgyuiopqwertnmzxcvb
 
-" /,? $B8!:w7k2L$r%O%$%i%$%H(B
+" /,? 検索結果をハイライト
 set hlsearch
 
-" :[tab]open $B$NJd40BP>]$H=gHV(B
+" :[tab]open の補完対象と順番
 set complete=tsl
 
-" $B%Z!<%8%m!<%I;~$K%F%-%9%H%\%C%/%9$K%U%)!<%+%9$9$k$N$rKI$0(B
+" ページロード時にテキストボックスにフォーカスするのを防ぐ
 set focuscontent
 
 " mappings
 " ======================================================================
-" undo$B0lMw$+$i3+$/(B
+" undo一覧から開く
 nnoremap U :undo<Space>
 
-" C-r $B$G%V%i%&%6:F5/F0(B
+" C-r でブラウザ再起動
 nnoremap <C-r> :restart<CR>
 
-" $B>e$N%G%#%l%/%H%j$K0\F0(B
+" 上のディレクトリに移動
 nnoremap <BS> gu
 nnoremap <C-BS> gU
 
-" j/k $B$G$N%9%/%m!<%kI}$r(B1$B9T$+$i(B3$B9T$KJQ99(B
+" j/k でのスクロール幅を1行から3行に変更
 nnoremap j 3j
 nnoremap k 3k
 nnoremap <C-j> 3j
 nnoremap <C-k> 3k
 
-" J/K $B$r(BC-d/u$B8_49$K(B
+" J/K をC-d/u互換に
 nnoremap J <C-d>
 nnoremap K <C-u>
 
-" $B%?%V0\F0(B
+" タブ移動
 nnoremap h <C-p>
 nnoremap l <C-n>
 
-" $B%?%V=g=xJQ99(B
+" タブ順序変更
 nnoremap <C-h> :tabmove! -1<CR>
 nnoremap <C-l> :tabmove! +1<CR>
 
 " buffer
 nnoremap . b
 
-" $BL$J,N`$N%V%C%/%^!<%/$KDI2C(B/$B:o=|(B
+" 未分類のブックマークに追加/削除
 nnoremap ,a A
 
-" ! $B$G%Z!<%8$N(BCSS$B$r(Bon/off
+" ! でページのCSSをon/off
 nnoremap ! :set invum<CR>
 
-" $B%Z!<%8$N%(%s%3!<%G%#%s%0$rJQ99(B
+" ページのエンコーディングを変更
 nnoremap ,es :set encoding=Shift_JIS<CR>
 nnoremap ,ec :set encoding=EUC-JP<CR>
 nnoremap ,eu :set encoding=UTF-8<CR>
 nnoremap ,ei :set encodeing=ISO-2022-JP<CR>
 
-" ex mode$B$G(BC-j$B$rL58z2=(B
+" ex modeでC-jを無効化
 cnoremap <C-j> <Nop>
 
 " command
 " ======================================================================
-" autocmd VimperatorEnter .* <args> $B$r(B lazy $B%3%^%s%I$H$7$FEPO?(B
+" autocmd VimperatorEnter .* <args> を lazy コマンドとして登録
 command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
 
-" $B%+%l%s%@!<$rI=<((B
+" カレンダーを表示
 command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
 
 " plugins
@@ -170,7 +170,7 @@ lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' j k s a p v c
 lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' -events=vkeypress i,Tj T
 " iview
 lazy fmaps -u='^chrome://iviewfx/content/iview\.html' j k s a z o i,tj p
-" $B$O$F%V(B
+" はてブ
 lazy fmaps -u='^http://b\.hatena\.ne\.jp/(?!(entry|articles|guide))' j k o,oj e a,b
 
 " proxy.js
@@ -255,7 +255,7 @@ EOM
 
 " js
 " ======================================================================
-" bang$B$r%H%0%k(B
+" bangをトグル
 " cf.http://d.hatena.ne.jp/eagletmt/20100506/1273141081
 js <<EOM
 mappings.addUserMap(
@@ -305,7 +305,7 @@ qmark r recss
 " ======================================================================
 color hint
 
-" ex mode$B;~(BIME$B$r(BOFF
+" ex mode時IMEをOFF
 style -name commandline-ime chrome://* #liberator-commandline-command input { ime-mode: inactive; }
 
 " toolbarbutton feed icon
@@ -315,7 +315,7 @@ style -name toolbarbutton-feed-icon chrome://* #liberator-customize-toolbar > #f
 style -name ldr-imgsize-fix http://reader.livedoor.com/reader/ .body img { max-width: 600px; max-height: 600px; }
 style -name fastladder-imgsize-fix http://fastladder.com/reader/ .body img { max-width: 600px; max-height: 600px; }
 
-" $B0BA4$J(BLDR
+" 安全なLDR
 style -name ldr-businessstyle http://reader.livedoor.com/reader/ <<EOM
   .body img {
     opacity: .3;
@@ -325,7 +325,7 @@ EOM
 styledisable -name ldr-businessstyle
 nnoremap ,sl :styletoggle -name ldr-businessstyle<CR>
 
-" $B0BA4$J(BTumblr
+" 安全なTumblr
 style -name tumblr-businessstyle tumblr.com <<EOM
   .image {
     opacity: 1;
