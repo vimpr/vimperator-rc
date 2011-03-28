@@ -1,0 +1,350 @@
+" for vimperator 3.0 (created: 2011/03/06 22:51:04)
+" vim: set ft=vimperator:
+
+" prefs
+" ======================================================================
+" ポップアップ許可数を拡張 cf.http://la.ma.la/blog/diary_200611171115.htm
+set! dom.popup_maximum=9999
+
+" Gmail/LDR/Fastladder/はてブでは新規タブをバックグラウンドで開く
+autocmd LocationChange '^(?!https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide))))' :set! browser.tabs.loadDivertedInBackground=false
+autocmd LocationChange '^https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide)))' :set! browser.tabs.loadDivertedInBackground=true
+
+" RefControl
+set! refcontrol.actions="@DEFAULT=@NORMAL ameba.jp= dtiblog.com=@FORGE fc2.com= image.itmedia.co.jp=@FORGE img.itmedia.co.jp=@FORGE minkch.com=@NORMAL momi7.momi3.net=@FORGE www.b-idol.com=@FORGE xyzzz.blog.shinobi.jp=@FORGE"
+
+" options
+" ======================================================================
+" GUI
+set gui=none
+
+" ヒントの文字列をアルファベットに
+set hintchars=hjklasdfgyuiopqwertnmzxcvb
+
+" /,? 検索結果をハイライト
+set hlsearch
+
+" :[tab]open の補完対象と順番
+set complete=tsl
+
+" ページロード時にテキストボックスにフォーカスするのを防ぐ
+set focuscontent
+
+" mappings
+" ======================================================================
+" undo一覧から開く
+nnoremap U :undo<Space>
+
+" C-r でブラウザ再起動
+nnoremap <C-r> :restart<CR>
+
+" 上のディレクトリに移動
+nnoremap <BS> gu
+nnoremap <C-BS> gU
+
+" j/k でのスクロール幅を1行から3行に変更
+nnoremap j 3j
+nnoremap k 3k
+nnoremap <C-j> 3j
+nnoremap <C-k> 3k
+
+" J/K をC-d/u互換に
+nnoremap J <C-d>
+nnoremap K <C-u>
+
+" タブ移動
+nnoremap h <C-p>
+nnoremap l <C-n>
+
+" タブ順序変更
+nnoremap <C-h> :tabmove! -1<CR>
+nnoremap <C-l> :tabmove! +1<CR>
+
+" buffer
+nnoremap . b
+
+" 未分類のブックマークに追加/削除
+nnoremap ,a A
+
+" ! でページのCSSをon/off
+nnoremap ! :set invum<CR>
+
+" ページのエンコーディングを変更
+nnoremap ,es :set encoding=Shift_JIS<CR>
+nnoremap ,ec :set encoding=EUC-JP<CR>
+nnoremap ,eu :set encoding=UTF-8<CR>
+nnoremap ,ei :set encodeing=ISO-2022-JP<CR>
+
+" ex modeでC-jを無効化
+cnoremap <C-j> <Nop>
+
+" command
+" ======================================================================
+" autocmd VimperatorEnter .* <args> を lazy コマンドとして登録
+command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
+
+" カレンダーを表示
+command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
+
+" plugins
+" ======================================================================
+let g:plugin_loader_roots = "~/Sites/git/vimperator-plugins/ ~/.vimperator/load/ ~/Dropbox/github/"
+let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,gmperator,hatenaStar,hint-tombloo,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,twitter,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,prevent_pseduo_domain,statusline-toolbar,ldrize_cooperation"
+
+" statusline-toolbar.js
+set statustoolbars=feed-button
+
+" appendAnchor.js
+let g:auto_append_anchor = "true"
+let g:auto_append_anchor_once = "true"
+
+" sbmcommentsviewer.js
+let g:def_sbm_format = "timestamp,id,tags,comment"
+let g:def_sbms = "hdl"
+noremap b :echo ":viewSBMComments"<CR>:viewSBMComments<CR>
+
+" direct_bookmark.js
+let g:direct_sbm_use_services_by_tag = "h"
+let g:direct_sbm_use_services_by_post = "h"
+let g:direct_sbm_is_normalize = "false"
+let g:direct_sbm_is_use_migemo = "true"
+nnoremap B :bentry<CR>
+nnoremap a :sbm<CR>:echo ":sbm"<CR>
+nnoremap A :sbm<Space>
+lazy :btags
+
+" hatenabookmark.js
+nnoremap s :hbtab<Space>
+nnoremap S :hbtab<Space>
+js <<EOM
+liberator.globalVariables.hBookmark_shortcuts = {
+    hintsAdd     : 'A',
+    hintsComment : ' ',
+    add          : ['C'],
+    comment      : ['c'],
+};
+if (typeof hBookmark != 'undefined') liberator.loadScript('chrome://hatenabookmark/content/vimperator/plugin/hatenabookmark.js', {__proto__: this});
+EOM
+
+" ldrize_cooperation.js
+let g:ldrc_captureMappings = "['j','k','p','o','?']"
+"let g:ldrc_intelligence_bind = "true"
+"let g:ldrc_skip = "0"
+nnoremap Q :toggleldrc<CR>
+
+" heuristic-search.js
+nnoremap ` :hsearch<Space>
+
+" multi_requester.js
+nnoremap ,t :twitter<Space>
+nnoremap ,T :twitter!<Space>
+nnoremap ,@ :twitter!@<CR>
+nnoremap ,mt :mr<Space>twitter-search-pcod-no-jp<Space>
+nnoremap ,mT :mr<Space>twitter-search-pcod-no-jp<Space>["retlet"]<CR>
+nnoremap ,mf :mr<Space>favotter-new<Space>
+nnoremap ,mF :mr<Space>favotter-new<Space>["retlet"]<CR>
+
+" copy.js
+nnoremap ,c :copy<Space>
+js <<EOM
+liberator.globalVariables.copy_templates = [
+  { label: 'titleAndURL',    value: '%TITLE% %URL%' },
+  { label: 'title',          value: '%TITLE%' },
+  { label: 'url',            value: '%URL%' },
+  { label: 'markdown',       value: '[%TITLE%](%URL% "%TITLE%")' },
+  { label: 'markdownsel',    value: '[%SEL%](%URL% "%TITLE%")' },
+  { label: 'htmlblockquote', value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>' }
+];
+EOM
+
+" x-hint.js
+nnoremap -urls='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' f :xh t //*[@class="quote_source"]//a[not(@class="tumblr_blog")]|//*[@class="caption"]//a[not(@class="tumblr_blog")]<CR>
+
+" feedSomeKeys_3.js
+" Gmail
+lazy fmaps -u='^https?://mail\.google\.com/(mail|a)/' c j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
+" Tumblr (use: tombloo.xpi, dashboard+tombloo.user.js, reblogcommand.user.js, playontumblr.user.js)
+lazy fmaps -u='^http://[^\./]*\.tumblr\.com/' i,tj e,tk n,h
+" LDR/Fastladder (use: tombloo.xpi, ldr+tombloo.user.js, ldr_relative_rate.user.js)
+lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' j k s a p v c z Z b,i B,b e r < > o,vj J,<Space> K,<S-Space> q w g u
+lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' -events=vkeypress i,Tj T
+" iview
+lazy fmaps -u='^chrome://iviewfx/content/iview\.html' j k s a z o i,tj p
+" はてブ
+lazy fmaps -u='^http://b\.hatena\.ne\.jp/(?!(entry|articles|guide))' j k o,oj e a,b
+
+" proxy.js
+js <<EOM
+liberator.globalVariables.proxy_settings = [
+   {
+      conf_name: 'disable',
+      conf_usage: 'direct connection',
+      settings: [
+      {     
+         label: 'type',
+         param: 0
+      }
+      ]     
+   },
+   {            
+      conf_name: 'proxy.pac',
+      conf_usage: 'use original proxy settings',
+      settings: [
+      {
+         label: 'type',
+         param: 2
+      },
+      {
+         label: 'autoconfig_url',
+         param: 'file:///Users/retlet/Dropbox/proxy.pac'
+      },
+      ]
+   }
+];
+EOM
+
+" stella.js
+js <<EOM
+function addLocalMappings(buffer, maps) {
+  maps.forEach(
+    function (map) {
+      let [cmd, action, extra] = map;
+      let actionFunc = action;
+      extra || (extra = {});
+
+      if (typeof action == "string") {
+        if (action.charAt(0) == ':')
+          actionFunc = extra.open ? function () commandline.open("", action, modes.EX)
+                                  : function () liberator.execute(action);
+        else
+          actionFunc = function () events.feedkeys(action, extra.noremap, true);
+      }
+      extra.matchingUrls = buffer;
+      mappings.addUserMap(
+        [modes.NORMAL],
+        [cmd],
+        "Local mapping for " + buffer,
+        actionFunc,
+        extra
+      );
+    }
+  );
+}
+addLocalMappings(
+  /^(http:\/\/(es|www).nicovideo.jp\/(watch|playlist\/mylist)|http:\/\/(jp|www)\.youtube\.com\/watch|http:\/\/(www\.)?vimeo\.com\/(channels\/(hd)?#)?\d+)/,
+  [
+    ['<C-g>', ':pageinfo S',      ],
+    ['p',     ':stplay',          ],
+    ['m',     ':stmute',          ],
+    ['c',     ':stcomment',       ],
+    ['zz',    ':stlarge',         ],
+    ['r',     ':strepeat',        ],
+    ['+',     ':stvolume! 10',    ],
+    ['-',     ':stvolume! -10',   ],
+    [',h',     ':stseek! -10',     ],
+    [',l',     ':stseek! 10',      ],
+    [',s',     ':stseek ',         {open: true}],
+    [',S',     ':stseek! ',        {open: true}],
+    ['v',     ':stvolume ',       {open: true}],
+    ['V',     ':stvolume! ',      {open: true}],
+    ['o',     ':strelations ',    {open: true}],
+    ['O',     ':strelations! ',   {open: true}],
+  ]
+);
+EOM
+
+" js
+" ======================================================================
+" bangをトグル
+" cf.http://d.hatena.ne.jp/eagletmt/20100506/1273141081
+js <<EOM
+mappings.addUserMap(
+  [modes.COMMAND_LINE],
+  ['<C-x>'],
+  'toggle bang',
+  function() {
+    let [,cmd,bang,args] = commands.parseCommand(commandline.command);
+    bang = bang ? '' : '!';
+    commandline.command = cmd + bang + ' ' + args;
+});
+EOM
+
+" Greasemonkey 0.9.1 patch
+" cf.http://d.hatena.ne.jp/wlt/20110130/1296359063
+js <<EOM
+autocommands.add('VimperatorEnter', '.*',
+  function() {
+    let gm = Components.classes['@greasemonkey.mozdev.org/greasemonkey-service;1'];
+    if (gm) {
+      gm = gm.getService().wrappedJSObject;
+      if (gm.injectScripts.toSource().search('sharedWindow') == -1) {
+          gm.injectScripts = liberator.eval(
+              gm.injectScripts.toSource()
+                  .replace(/(?=var firebugConsole)/,
+                          'var sharedWindow = {};' +
+                          'sharedWindow.window = sharedWindow;' +
+                          'sharedWindow.__proto__ = new XPCNativeWrapper(unsafeContentWin);')
+                  .replace(/(?=sandbox\.__proto__)/, ' sandbox.window = sharedWindow;'),
+              gm.injectScripts);
+      }
+    }
+  });
+EOM
+
+" qmarks
+" ======================================================================
+qmark g https://mail.google.com/
+qmark c https://www.google.com/calendar/
+qmark p pp 
+qmark l al 
+qmark f af 
+qmark t at 
+qmark r recss 
+
+" style
+" ======================================================================
+color hint
+
+" ex mode時IMEをOFF
+style -name commandline-ime chrome://* #liberator-commandline-command input { ime-mode: inactive; }
+
+" toolbarbutton feed icon
+style -name toolbarbutton-feed-icon chrome://* #liberator-customize-toolbar > #feed-button { border: none !important; background: none !important; min-width: 0 !important; padding: 0 !important; }
+
+" imgsize fix
+style -name ldr-imgsize-fix http://reader.livedoor.com/reader/ .body img { max-width: 600px; max-height: 600px; }
+style -name fastladder-imgsize-fix http://fastladder.com/reader/ .body img { max-width: 600px; max-height: 600px; }
+
+" 安全なLDR
+style -name ldr-businessstyle http://reader.livedoor.com/reader/ <<EOM
+  .body img {
+    opacity: .3;
+    max-width: 150px !important;
+    max-height: 150px !important;
+EOM
+styledisable -name ldr-businessstyle
+nnoremap ,sl :styletoggle -name ldr-businessstyle<CR>
+
+" 安全なTumblr
+style -name tumblr-businessstyle tumblr.com <<EOM
+  .image {
+    opacity: 1;
+    width: 25% !important;
+    height: 25% !important;
+  }
+  img[src*="media.tumblr.com"] {
+    opacity: .3;
+    max-width: 150px !important;
+    max-height: 150px !important;
+  }
+  object embed {
+    max-width: 150px !important;
+    max-height: 150px !important;
+  }
+  .photo .photo_loading {
+    background-image: none !important;
+  }
+EOM
+styledisable -name tumblr-businessstyle
+nnoremap ,st :styletoggle -name tumblr-businessstyle<CR>
+
