@@ -57,8 +57,8 @@ nnoremap h <C-p>
 nnoremap l <C-n>
 
 " タブ順序変更
-nnoremap <C-h> :tabmove! -1<CR>
-nnoremap <C-l> :tabmove! +1<CR>
+nnoremap <C-h> :tabmove! -1<CR><Esc>
+nnoremap <C-l> :tabmove! +1<CR><Esc>
 
 " buffer
 nnoremap . b
@@ -89,7 +89,12 @@ command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
 " plugins
 " ======================================================================
 let g:plugin_loader_roots = "~/Sites/git/vimperator-plugins/ ~/.vimperator/load/ ~/Dropbox/github/"
-let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,gmperator,hatenaStar,hint-tombloo,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,twitter,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,prevent_pseduo_domain,statusline-toolbar,ldrize_cooperation"
+let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,gmperator,hatenaStar,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,prevent_pseduo_domain,statusline-toolbar,ldrize_cooperation,migemo_completion,hint-tombloo-mod,caret-hint"
+
+" caret-hint.js
+lazy nunmap c;c
+lazy nunmap c;C
+lazy nunmap c;S
 
 " statusline-toolbar.js
 set statustoolbars=feed-button
@@ -136,9 +141,6 @@ nnoremap Q :toggleldrc<CR>
 nnoremap ` :hsearch<Space>
 
 " multi_requester.js
-nnoremap ,t :twitter<Space>
-nnoremap ,T :twitter!<Space>
-nnoremap ,@ :twitter!@<CR>
 nnoremap ,mt :mr<Space>twitter-search-pcod-no-jp<Space>
 nnoremap ,mT :mr<Space>twitter-search-pcod-no-jp<Space>["retlet"]<CR>
 nnoremap ,mf :mr<Space>favotter-new<Space>
@@ -305,11 +307,11 @@ qmark r recss
 " ======================================================================
 color hint
 
-" ex mode時IMEをOFF
-style -name commandline-ime chrome://* #liberator-commandline-command input { ime-mode: inactive; }
-
 " toolbarbutton feed icon
 style -name toolbarbutton-feed-icon chrome://* #liberator-customize-toolbar > #feed-button { border: none !important; background: none !important; min-width: 0 !important; padding: 0 !important; }
+
+" ex mode時IMEをOFF
+style -name commandline-ime chrome://* #liberator-commandline-command input { ime-mode: inactive; }
 
 " imgsize fix
 style -name ldr-imgsize-fix http://reader.livedoor.com/reader/ .body img { max-width: 600px; max-height: 600px; }
