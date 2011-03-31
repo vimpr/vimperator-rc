@@ -35,6 +35,10 @@ set focuscontent
 " undo一覧から開く
 nnoremap U :undo<Space>
 
+" いくつかのサービスでrをreblogに渡すために
+nnoremap R r
+nnoremap ,r R
+
 " C-r でブラウザ再起動
 nnoremap <C-r> :restart<CR>
 
@@ -75,6 +79,9 @@ nnoremap ,ec :set encoding=EUC-JP<CR>
 nnoremap ,eu :set encoding=UTF-8<CR>
 nnoremap ,ei :set encodeing=ISO-2022-JP<CR>
 
+" visual modeで選択したテキストを検索
+vnoremap P y<Esc><Esc>P
+
 " ex modeでC-jを無効化
 cnoremap <C-j> <Nop>
 
@@ -89,15 +96,17 @@ command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
 " plugins
 " ======================================================================
 let g:plugin_loader_roots = "~/Sites/git/vimperator-plugins/ ~/.vimperator/load/ ~/Dropbox/github/"
-let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,gmperator,hatenaStar,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,prevent_pseduo_domain,statusline-toolbar,ldrize_cooperation,migemo_completion,hint-tombloo-mod,caret-hint"
+let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,hatenaStar,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,prevent_pseduo_domain,statusline-toolbar,ldrize_cooperation,migemo_completion,hint-tombloo-mod,caret-hint"
+
+" spatial-navigation.js
+let g:spatial_navigation_mappings = "<C-M-h> <C-M-j> <C-M-k> <C-M-l>"
 
 " caret-hint.js
-lazy nunmap c;c
-lazy nunmap c;C
-lazy nunmap c;S
-
-" statusline-toolbar.js
-set statustoolbars=feed-button
+let g:caret_hint_key = "i"
+let g:caret_hint_tail_key = "I"
+let g:caret_hint_select_key = "v"
+let g:caret_hint_select_tail_key = "V"
+let g:caret_hint_swap_key = "s"
 
 " appendAnchor.js
 let g:auto_append_anchor = "true"
@@ -106,15 +115,14 @@ let g:auto_append_anchor_once = "true"
 " sbmcommentsviewer.js
 let g:def_sbm_format = "timestamp,id,tags,comment"
 let g:def_sbms = "hdl"
-noremap b :echo ":viewSBMComments"<CR>:viewSBMComments<CR>
+noremap b :viewSBMComments<CR>
 
 " direct_bookmark.js
 let g:direct_sbm_use_services_by_tag = "h"
 let g:direct_sbm_use_services_by_post = "h"
-let g:direct_sbm_is_normalize = "false"
 let g:direct_sbm_is_use_migemo = "true"
 nnoremap B :bentry<CR>
-nnoremap a :sbm<CR>:echo ":sbm"<CR>
+nnoremap a :sbm<CR>
 nnoremap A :sbm<Space>
 lazy :btags
 
@@ -123,8 +131,8 @@ nnoremap s :hbtab<Space>
 nnoremap S :hbtab<Space>
 js <<EOM
 liberator.globalVariables.hBookmark_shortcuts = {
-    hintsAdd     : 'A',
-    hintsComment : ' ',
+    hintsAdd     : 'a',
+    hintsComment : 'c',
     add          : ['C'],
     comment      : ['c'],
 };
@@ -141,10 +149,11 @@ nnoremap Q :toggleldrc<CR>
 nnoremap ` :hsearch<Space>
 
 " multi_requester.js
-nnoremap ,mt :mr<Space>twitter-search-pcod-no-jp<Space>
-nnoremap ,mT :mr<Space>twitter-search-pcod-no-jp<Space>["retlet"]<CR>
-nnoremap ,mf :mr<Space>favotter-new<Space>
-nnoremap ,mF :mr<Space>favotter-new<Space>["retlet"]<CR>
+nnoremap ,ma :mr alc<Space>
+nnoremap ,mt :mr twitter-search-pcod-no-jp<Space>
+nnoremap ,mT :mr twitter-search-pcod-no-jp<Space>["retlet"]<CR>
+nnoremap ,mf :mr favotter-new<Space>
+nnoremap ,mF :mr favotter-new<Space>["retlet"]<CR>
 
 " copy.js
 nnoremap ,c :copy<Space>
@@ -159,17 +168,28 @@ liberator.globalVariables.copy_templates = [
 ];
 EOM
 
+" tombloo.js
+nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' i :tombloo Link - LDR<CR>
+
+" hint-tombloo-mod.js
+let g:hint_tombloo_key = 'r'
+
 " x-hint.js
-nnoremap -urls='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' f :xh t //*[@class="quote_source"]//a[not(@class="tumblr_blog")]|//*[@class="caption"]//a[not(@class="tumblr_blog")]<CR>
+nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' r :xh r //*[contains(concat(" ",normalize-space(@class)," "), " hilight ")]//*[@class="item_body"]//img<CR>
+nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' b :xh c //*[contains(concat(" ",normalize-space(@class)," "), " hilight ")]//*[@class="item_info"]/a[1]<CR>
+nnoremap -u='^http://www\.tumblr\.com/' f :xh o //a[not(@class="tumblr_blog")]<CR>
+nnoremap -u='^http://www\.tumblr\.com/' F :xh t //a[not(@class="tumblr_blog")]<CR>
+"nnoremap -u='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' f :xh o id("nav")//a | id("right_column")//a<CR>
+"nnoremap -u='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' F :xh t //*[@class="quote_source"]//a[not(@class="tumblr_blog")]|//*[@class="caption"]//a[not(@class="tumblr_blog")]<CR>
 
 " feedSomeKeys_3.js
 " Gmail
 lazy fmaps -u='^https?://mail\.google\.com/(mail|a)/' c j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
-" Tumblr (use: tombloo.xpi, dashboard+tombloo.user.js, reblogcommand.user.js, playontumblr.user.js)
-lazy fmaps -u='^http://[^\./]*\.tumblr\.com/' i,tj e,tk n,h
+" Tumblr (use: tombloo.xpi, dashboard+tombloo.user.js, reblogcommand.user.js, playontumblr.user.js, tumblr_life.user.js)
+lazy fmaps -u='^http://[^\./]*\.tumblr\.com/' i,tj e,tk n,h, r,t I,a <C-i>,e
 " LDR/Fastladder (use: tombloo.xpi, ldr+tombloo.user.js, ldr_relative_rate.user.js)
-lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' j k s a p v c z Z b,i B,b e r < > o,vj J,<Space> K,<S-Space> q w g u
-lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' -events=vkeypress i,Tj T
+lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' j k s a p v c z <S-z> ,r,r < > o,vj J,<Space> K,<S-Space> q w g
+lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' -events=vkeypress T
 " iview
 lazy fmaps -u='^chrome://iviewfx/content/iview\.html' j k s a z o i,tj p
 " はてブ
@@ -238,15 +258,13 @@ addLocalMappings(
     ['<C-g>', ':pageinfo S',      ],
     ['p',     ':stplay',          ],
     ['m',     ':stmute',          ],
-    ['c',     ':stcomment',       ],
+    [',c',    ':stcomment',       ],
     ['zz',    ':stlarge',         ],
     ['r',     ':strepeat',        ],
     ['+',     ':stvolume! 10',    ],
     ['-',     ':stvolume! -10',   ],
-    [',h',     ':stseek! -10',     ],
-    [',l',     ':stseek! 10',      ],
-    [',s',     ':stseek ',         {open: true}],
-    [',S',     ':stseek! ',        {open: true}],
+    ['<',     ':stseek! -10',     ],
+    ['>',     ':stseek! 10',      ],
     ['v',     ':stvolume ',       {open: true}],
     ['V',     ':stvolume! ',      {open: true}],
     ['o',     ':strelations ',    {open: true}],
@@ -269,6 +287,18 @@ mappings.addUserMap(
     bang = bang ? '' : '!';
     commandline.command = cmd + bang + ' ' + args;
 });
+EOM
+
+" Firefoxのタブを開く位置をデフォで現在のタブの右隣にする（※ gBrowser.addTabの改造）
+" cf.http://d.hatena.ne.jp/wlt/20110112/1294859530
+js <<EOM
+gBrowser.addTab = liberator.eval(
+    '(' +
+    gBrowser.addTab.toSource()
+            .replace(/var aRelatedToCurrent;/, 'var aRelatedToCurrent = true;')
+            .replace(/aRelatedToCurrent = params\.relatedToCurrent;/, 'aRelatedToCurrent = params.relatedToCurrent === undefined ? true : params.relatedToCurrent;') +
+    ')',
+    gBrowser.addTab);
 EOM
 
 " Greasemonkey 0.9.1 patch
@@ -306,8 +336,10 @@ qmark r recss
 " style
 " ======================================================================
 color hint
+style -name liberator-statusline chrome://* #liberator-statusline { padding-top: 2px; }
 
-" toolbarbutton feed icon
+" toolbarbutton
+style -name liberator-customize-toolbar chrome://* #liberator-customize-toolbar { -moz-appearance: none !important; }
 style -name toolbarbutton-feed-icon chrome://* #liberator-customize-toolbar > #feed-button { border: none !important; background: none !important; min-width: 0 !important; padding: 0 !important; }
 
 " ex mode時IMEをOFF
