@@ -1,17 +1,24 @@
-" for vimperator 3.0 (created: 2011/03/06 22:51:04)
+" for vimperator hg head
 " vim: set ft=vimperator:
 
 " prefs
 " ======================================================================
+" ダウンロードマネージャを表示しない
+set! browser.download.manager.showWhenStarting=false
+
+" 最後のタブを閉じたときに Firefox を終了しない
+set! browser.tabs.closeWindowWithLastTab=false
+
 " ポップアップ許可数を拡張 cf.http://la.ma.la/blog/diary_200611171115.htm
 set! dom.popup_maximum=9999
 
 " Gmail/LDR/Fastladder/はてブでは新規タブをバックグラウンドで開く
-autocmd LocationChange '^(?!https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide))))' :set! browser.tabs.loadDivertedInBackground=false
-autocmd LocationChange '^https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide)))' :set! browser.tabs.loadDivertedInBackground=true
+" autocmd LocationChange '^(?!https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide))))' :set! browser.tabs.loadDivertedInBackground=false
+" autocmd LocationChange '^https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide)))' :set! browser.tabs.loadDivertedInBackground=true
+set! browser.tabs.loadDivertedInBackground=true
 
 " RefControl
-set! refcontrol.actions="@DEFAULT=@NORMAL ameba.jp= dtiblog.com=@FORGE fc2.com= image.itmedia.co.jp=@FORGE img.itmedia.co.jp=@FORGE minkch.com=@NORMAL momi7.momi3.net=@FORGE www.b-idol.com=@FORGE xyzzz.blog.shinobi.jp=@FORGE"
+set! refcontrol.actions=@DEFAULT=@NORMAL\ ameba.jp=\ dtiblog.com=@FORGE\ fc2.com=\ image.itmedia.co.jp=@FORGE\ img.itmedia.co.jp=@FORGE\ minkch.com=@NORMAL\ momi7.momi3.net=@FORGE\ pixiv.net=@3RDPARTY:@FORGE\ www.b-idol.com=@FORGE\ xyzzz.blog.shinobi.jp=@FORGE
 
 " options
 " ======================================================================
@@ -30,8 +37,15 @@ set complete=tsl
 " ページロード時にテキストボックスにフォーカスするのを防ぐ
 set focuscontent
 
+" Beep音無効
+set visualbell
+hi Bell display: none;
+
 " mappings
 " ======================================================================
+" PATHTHROUGHモード
+nnoremap <C-i> i
+
 " undo一覧から開く
 nnoremap U :undo<Space>
 
@@ -39,7 +53,7 @@ nnoremap U :undo<Space>
 nnoremap R r
 nnoremap ,r R
 
-" C-r でブラウザ再起動
+" ブラウザ再起動
 nnoremap <C-r> :restart<CR>
 
 " 上のディレクトリに移動
@@ -61,10 +75,10 @@ nnoremap h <C-p>
 nnoremap l <C-n>
 
 " タブ順序変更
-nnoremap <C-h> :tabmove! -1<CR><Esc>
-nnoremap <C-l> :tabmove! +1<CR><Esc>
+nnoremap <C-h> :tabmove! -1<CR>
+nnoremap <C-l> :tabmove! +1<CR>
 
-" buffer
+" タブ一覧
 nnoremap . b
 
 " 未分類のブックマークに追加/削除
@@ -95,8 +109,9 @@ command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
 
 " plugins
 " ======================================================================
+" plugin_loader.js
 let g:plugin_loader_roots = "~/Sites/git/vimperator-plugins/ ~/.vimperator/load/ ~/Dropbox/github/"
-let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,hatenaStar,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,prevent_pseduo_domain,statusline-toolbar,ldrize_cooperation,migemo_completion,hint-tombloo-mod,caret-hint"
+let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,hatenaStar,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,statusline-toolbar,ldrize_cooperation,migemo_completion,hint-tombloo-mod,caret-hint,QB,prevent-pseudo-domain,lo"
 
 " spatial-navigation.js
 let g:spatial_navigation_mappings = "<C-M-h> <C-M-j> <C-M-k> <C-M-l>"
@@ -113,9 +128,10 @@ let g:auto_append_anchor = "true"
 let g:auto_append_anchor_once = "true"
 
 " sbmcommentsviewer.js
-let g:def_sbm_format = "timestamp,id,tags,comment"
-let g:def_sbms = "hdl"
+let g:def_sbm_format = "id,tags,comment,timestamp"
+let g:def_sbms = "h"
 noremap b :viewSBMComments<CR>
+color sbmcommentsviewer
 
 " direct_bookmark.js
 let g:direct_sbm_use_services_by_tag = "h"
@@ -140,7 +156,7 @@ if (typeof hBookmark != 'undefined') liberator.loadScript('chrome://hatenabookma
 EOM
 
 " ldrize_cooperation.js
-let g:ldrc_captureMappings = "['j','k','p','o','?']"
+let g:ldrc_captureMappings = "['j','k','p','o']"
 "let g:ldrc_intelligence_bind = "true"
 "let g:ldrc_skip = "0"
 nnoremap Q :toggleldrc<CR>
@@ -149,11 +165,10 @@ nnoremap Q :toggleldrc<CR>
 nnoremap ` :hsearch<Space>
 
 " multi_requester.js
-nnoremap ,ma :mr alc<Space>
-nnoremap ,mt :mr twitter-search-pcod-no-jp<Space>
-nnoremap ,mT :mr twitter-search-pcod-no-jp<Space>["retlet"]<CR>
-nnoremap ,mf :mr favotter-new<Space>
-nnoremap ,mF :mr favotter-new<Space>["retlet"]<CR>
+nnoremap ,m :mr<Space>
+nnoremap ma :mr alc<Space>
+nnoremap mt :mr googletrans-ja<Space>
+nnoremap mT :mr googletrans-ja<CR>
 
 " copy.js
 nnoremap ,c :copy<Space>
@@ -167,33 +182,6 @@ liberator.globalVariables.copy_templates = [
   { label: 'htmlblockquote', value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>' }
 ];
 EOM
-
-" tombloo.js
-nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' i :tombloo Link - LDR<CR>
-
-" hint-tombloo-mod.js
-let g:hint_tombloo_key = 'r'
-
-" x-hint.js
-nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' r :xh r //*[contains(concat(" ",normalize-space(@class)," "), " hilight ")]//*[@class="item_body"]//img<CR>
-nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' b :xh c //*[contains(concat(" ",normalize-space(@class)," "), " hilight ")]//*[@class="item_info"]/a[1]<CR>
-nnoremap -u='^http://www\.tumblr\.com/' f :xh o //a[not(@class="tumblr_blog")]<CR>
-nnoremap -u='^http://www\.tumblr\.com/' F :xh t //a[not(@class="tumblr_blog")]<CR>
-"nnoremap -u='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' f :xh o id("nav")//a | id("right_column")//a<CR>
-"nnoremap -u='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' F :xh t //*[@class="quote_source"]//a[not(@class="tumblr_blog")]|//*[@class="caption"]//a[not(@class="tumblr_blog")]<CR>
-
-" feedSomeKeys_3.js
-" Gmail
-lazy fmaps -u='^https?://mail\.google\.com/(mail|a)/' c j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
-" Tumblr (use: tombloo.xpi, dashboard+tombloo.user.js, reblogcommand.user.js, playontumblr.user.js, tumblr_life.user.js)
-lazy fmaps -u='^http://[^\./]*\.tumblr\.com/' i,tj e,tk n,h, r,t I,a <C-i>,e
-" LDR/Fastladder (use: tombloo.xpi, ldr+tombloo.user.js, ldr_relative_rate.user.js)
-lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' j k s a p v c z <S-z> ,r,r < > o,vj J,<Space> K,<S-Space> q w g
-lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' -events=vkeypress T
-" iview
-lazy fmaps -u='^chrome://iviewfx/content/iview\.html' j k s a z o i,tj p
-" はてブ
-lazy fmaps -u='^http://b\.hatena\.ne\.jp/(?!(entry|articles|guide))' j k o,oj e a,b
 
 " proxy.js
 js <<EOM
@@ -273,6 +261,36 @@ addLocalMappings(
 );
 EOM
 
+" hint-tombloo-mod.js
+let g:hint_tombloo_key = 'r'
+
+" ウェブサービス最適化
+" feedSomeKeys_3.js, tombloo.js, x-hint.js
+" Gmail
+lazy fmaps -u='^https?://mail\.google\.com/(mail|a)/' c j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
+" iview
+" lazy fmaps -u='^chrome://iviewfx/content/iview\.html' j k s a z o i,tj p
+" はてブ
+lazy fmaps -u='^http://b\.hatena\.ne\.jp/(?!(entry|articles|guide))' j k o,oj e a,b
+" pixiv staccfeed
+lazy fmaps -u='^http://www\.pixiv\.net/stacc/' i,<S-u>j e,<S-u>k
+
+" Tumblr (use: tombloo.xpi, dashboard+tombloo.user.js, reblogcommand.user.js, playontumblr.user.js, tumblr_life.user.js)
+lazy fmaps -u='^http://[^\./]*\.tumblr\.com/' i,tj e,tk n,h, r,t I,l <C-i>,e c
+nnoremap -u='^http://www\.tumblr\.com/' f :xh o //a[not(@class="tumblr_blog")]<CR>
+nnoremap -u='^http://www\.tumblr\.com/' F :xh t //a[not(@class="tumblr_blog")]<CR>
+"nnoremap -u='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' f :xh o id("nav")//a | id("right_column")//a<CR>
+"nnoremap -u='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' F :xh t //*[@class="quote_source"]//a[not(@class="tumblr_blog")]|//*[@class="caption"]//a[not(@class="tumblr_blog")]<CR>
+
+" LDR/Fastladder
+" use: tombloo.xpi, ldr+tombloo.user.js, ldr_relative_rate.user.js
+lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' j k s a p v z <S-z> ,r,r < > o,vj J,<Space> K,<S-Space> q w g
+lazy fmaps -u='^http://(reader\.livedoor|fastladder)\.com/reader/' -events=vkeypress i,Tj e,Tk T
+nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' b :tombloo Link - LDR<CR>
+nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' B :tombloo! Link - LDR<CR>
+nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' r :xh r //*[contains(concat(" ",normalize-space(@class)," "), " hilight ")]//*[@class="item_body"]//img<CR>
+nnoremap -u='^http://(reader\.livedoor|fastladder)\.com/reader/' c :xh c //*[contains(concat(" ",normalize-space(@class)," "), " hilight ")]//*[@class="item_info"]/a[1]<CR>
+
 " js
 " ======================================================================
 " bangをトグル
@@ -336,7 +354,7 @@ qmark r recss
 " style
 " ======================================================================
 color hint
-style -name liberator-statusline chrome://* #liberator-statusline { padding-top: 2px; }
+style -name liberator-statusline chrome://* #liberator-statusline, #liberator-commandline { -moz-box-align: center; }
 
 " toolbarbutton
 style -name liberator-customize-toolbar chrome://* #liberator-customize-toolbar { -moz-appearance: none !important; }
@@ -344,6 +362,9 @@ style -name toolbarbutton-feed-icon chrome://* #liberator-customize-toolbar > #f
 
 " ex mode時IMEをOFF
 style -name commandline-ime chrome://* #liberator-commandline-command input { ime-mode: inactive; }
+
+" dolipoがブロックした要素を消す
+style -name ad-hide * .fast-hidden { display: none; }
 
 " imgsize fix
 style -name ldr-imgsize-fix http://reader.livedoor.com/reader/ .body img { max-width: 600px; max-height: 600px; }

@@ -1,0 +1,36 @@
+"hi CompGroup.liberator-sbmcommentsviewer padding: 10px 20px; font-size: 13px; background-color: #f9f9f9
+"hi CompGroup.liberator-sbmcommentsviewer>div -moz-box-sizing: border-box; background-color: #fff;
+"hi CompGroup.liberator-sbmcommentsviewer>div:not(:first-child) position: relative; padding-left: 20px;
+"hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-id>img position: absolute; left: -16px; margin: 0;
+"hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-timestamp opacity: .6; font-size: smaller;
+"hi CompGroup.liberator-sbmcommentsviewer>div>:last-child margin-right: 0;
+
+
+hi CompGroup.liberator-sbmcommentsviewer <<EOM
+  font-size: 14px;
+  background-color: #f9f9f9;
+EOM
+
+hi CompGroup.liberator-sbmcommentsviewer>:not(:first-child) <<EOM
+  -moz-box-sizing: border-box;
+EOM
+
+hi CompGroup.liberator-sbmcommentsviewer>div>span <<EOM
+  margin-right: 10px;
+EOM
+
+hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-id <<EOM
+  display: table-cell;
+  width: 100px;
+  padding-right: 10px;
+  text-align: right;
+EOM
+
+hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-timestamp <<EOM
+  opacity: .6;
+  font-size: smaller;
+EOM
+
+hi CompGroup.liberator-sbmcommentsviewer>div>:last-child <<EOM
+  padding-right: 0;
+EOM
