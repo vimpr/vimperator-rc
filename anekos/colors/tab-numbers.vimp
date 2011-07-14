@@ -1,0 +1,25 @@
+set notabnumbers
+style -name tab-number chrome://* <<EOM
+  @namespace url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);
+  #TabsToolbar {
+      counter-reset: tabnumber;
+  }
+
+ #TabsToolbar tab::before {
+      display:                  inline-block;
+      padding-top:              12px;
+      content:                  counter(tabnumber);
+      counter-increment:        tabnumber;
+      font-weight:              bold;
+      color:                    #eee;
+      font-size:                1.4em;
+      margin-right:             -0.3em;
+      z-index:                  0;
+      position:                 relative;
+      text-shadow:              rgba(0,0,0,.2) 1px 0,
+                                rgba(0,0,0,.2) 0 1px,
+                                rgba(0,0,0,.2) -1px 0,
+                                rgba(0,0,0,.2) 0 -1px,
+                                blue 0 0 0.4em;
+  }
+EOM

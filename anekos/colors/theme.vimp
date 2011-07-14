@@ -1,0 +1,246 @@
+" ==VimperatorColorSchema==
+" name: Sweets enhanced by snaka. (Based on 'Sweets')
+" ==/VimperatorColorSchema==
+
+hi -a ContentSeparator <<EOM
+  border-top-style: solid
+EOM
+
+hi Hint <<EOM
+  font-family      : monospace;
+  font-size        : 15px;
+  font-weight      : normal;
+  color            : lightyellow;
+  background-color : black;
+  border-color     : ButtonShadow;
+  border-width     : 0px;
+  border-style     : solid;
+  padding          : 0px 5px 0px 5px;
+EOM
+
+hi HintElem <<EOM
+  background-color: pink;
+  color: black;
+EOM
+
+hi HintActive <<EOM
+  background-color : hotpink;
+  color : white;
+EOM
+
+hi StatusLine <<EOM
+  color       : CornflowerBlue;
+  background  : #000;
+  font-weight : normal;
+  font-size   : 12pt;
+EOM
+
+
+hi Normal <<EOM
+  color      : LightYellow;
+  background : #333;
+  font-size  : 12pt;
+EOM
+
+hi CmdLine <<EOM
+  color      : LightYellow;
+  background : #333;
+  font-size  : 14pt;
+EOM
+
+hi InfoMsg <<EOM
+  color      : LightYellow;
+  background : #333;
+  font-size  : 12pt;
+EOM
+
+hi ModeMsg <<EOM
+  color      : LightYellow;
+  background-color : 0;
+  font-size  : 12pt;
+EOM
+
+hi MoreMsg <<EOM
+  color      : LimeGreen;
+  background : #333;
+EOM
+
+hi LineNr <<EOM
+  color      : DeepPink;
+  background : #333;
+  font-size  : 12pt;
+EOM
+
+hi Question <<EOM
+  color      : Yellow;
+  background : #333;
+  font-size  : 12pt;
+EOM
+
+hi WarningMsg <<EOM
+  color      : DeepPink;
+  background : #333;
+  font-size  : 12pt;
+EOM
+
+hi ErrorMsg <<EOM
+  color      : white;
+  background : red;
+  font-size  : 12pt;
+EOM
+
+hi NonText <<EOM
+  background : #333;
+EOM
+
+hi Null <<EOM
+  color : CornflowerBlue;
+EOM
+
+hi Tag <<EOM
+  color : CornflowerBlue;
+EOM
+
+hi CompResult <<EOM
+  color       : white;
+  text-shadow : none;
+  width     : 500px;
+  max-width : 500px;
+EOM
+
+hi CompDesc <<EOM
+  color     : Pink;
+  text-shadow : none;
+  width     : 500px;
+  max-width : 500px;
+EOM
+
+hi CompTitle <<EOM
+  color       : magenta;
+  background  : #222;
+  font-weight : bold;
+EOM
+
+hi CompItem <<EOM
+  color      : White;
+EOM
+
+hi CompItem[selected] <<EOM
+  color      : White;
+  background : Black;
+EOM
+
+hi Title <<EOM
+  color : white;
+EOM
+
+hi Indicator <<EOM
+  color : DodgerBlue;
+EOM
+
+hi String <<EOM
+  color : Orchid;
+EOM
+
+hi Number <<EOM
+  color : Orchid;
+EOM
+
+hi Object <<EOM
+  color : Khaki;
+EOM
+
+hi Function <<EOM
+  color : SkyBlue;
+EOM
+
+hi URL <<EOM
+  color : LightGreen;
+EOM
+
+hi TabNumber <<EOM
+  color       : white;
+  font-weight : bold;
+  font-size   : 10pt;
+EOM
+
+hi Hint <<EOM
+  font-size  : 1em;
+  border     : black solid 1px;
+  color      : black;
+  background : red;
+EOM
+
+hi Help <<EOM
+  font-size   : 10pt;
+  line-height : 1.4em;
+  font-family : -moz-fixed;
+EOM
+
+
+style -name statusbar chrome://* <<EOM
+  #status-bar statusbarpanel {
+    padding              : 0 1px !important;
+  }
+  statusbarpanel > * {
+    margin               : 0 !important;
+    padding              : 0 !important;
+  }
+EOM
+
+style -name toolbar chrome://* <<EOM
+  #status-bar, #addon-bar, #browser-bottombox, #liberator-bottombar {
+    background-color: black !important;
+    color: white;
+  }
+  #status-bar > * {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+EOM
+
+style -name tab chrome://* <<EOM
+  .tabbrowser-tab[selected=true] {
+    background                         : transparent !important;
+    color                              : DeepPink !important;
+  }
+
+  .tabbrowser-strip {
+    background                         : #444 !important;
+  }
+
+  tab[selected="true"] > * > * > * > .tab-text.tab-label {
+    font-size                          : 16px !important;
+    color                              : white !important;
+  }
+
+  tab > * > * > * > .tab-text.tab-label {
+    font-size                          : 16px !important;
+    color                              : lightgray !important;
+  }
+
+  .tabbrowser-tab {
+    padding                            : 0 0 0 5pt !important;
+    margin-bottom                      : 1pt !important;
+    border                             : none !important;
+  }
+
+  .tabs-newtab-button {
+    display                            : none !important;
+  }
+
+  #new-tab-button {
+    display                            : none !important;
+  }
+EOM
+
+style -name status-bar-bg chrome://* <<EOM
+  #addon-bar > *, #liberator-message, #liberator-statusline, #addon-bar {
+    background-color: black !important
+  }
+EOM
+
+
+
+" vim: set ft=vimperator:
+
