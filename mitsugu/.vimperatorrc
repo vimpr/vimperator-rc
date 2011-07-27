@@ -2,12 +2,6 @@ js <<EOM
 liberator.globalVariables.onclickTable={
   'github':'//span[@class="toggle"][1]',
   'jamendo':'//a[@title="Add to favorites"]',
-  'tinamia':'//img[@id="all"]',
-  'tinamic':'//img[@id="collection_button"]',
-  'tinamif':'//img[@id="fav"]',
-  'tinamii':'//img[@id="illust"]',
-  'tinamim':'//img[@id="manga"]',
-  'tinamiu':'//img[@id="user_menu"]',
   'tpprev':'//span[@class="comment_pagination_prev pagination_item"][1]',
   'tpnext':'//span[@class="comment_pagination_next pagination_item"][1]'
 };
