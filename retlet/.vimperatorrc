@@ -13,9 +13,9 @@ set! browser.tabs.closeWindowWithLastTab=false
 set! dom.popup_maximum=9999
 
 " Gmail/LDR/Fastladder/はてブでは新規タブをバックグラウンドで開く
-" autocmd LocationChange '^(?!https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide))))' :set! browser.tabs.loadDivertedInBackground=false
-" autocmd LocationChange '^https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide)))' :set! browser.tabs.loadDivertedInBackground=true
-set! browser.tabs.loadDivertedInBackground=true
+autocmd LocationChange '^(?!https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide))))' :set! browser.tabs.loadDivertedInBackground=false
+autocmd LocationChange '^https?://(mail\.google\.com/(mail|a)/|(reader\.livedoor|fastladder)\.com/reader/|b\.hatena\.ne\.jp/(?!(entry|articles|guide)))' :set! browser.tabs.loadDivertedInBackground=true
+"set! browser.tabs.loadDivertedInBackground=true
 
 " RefControl
 set! refcontrol.actions=@DEFAULT=@NORMAL\ ameba.jp=\ dtiblog.com=@FORGE\ fc2.com=\ image.itmedia.co.jp=@FORGE\ img.itmedia.co.jp=@FORGE\ minkch.com=@NORMAL\ momi7.momi3.net=@FORGE\ pixiv.net=@3RDPARTY:@FORGE\ www.b-idol.com=@FORGE\ xyzzz.blog.shinobi.jp=@FORGE
@@ -111,7 +111,17 @@ command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
 " ======================================================================
 " plugin_loader.js
 let g:plugin_loader_roots = "~/Sites/git/vimperator-plugins/ ~/.vimperator/load/ ~/Dropbox/github/"
-let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,hatenaStar,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,statusline-toolbar,ldrize_cooperation,migemo_completion,hint-tombloo-mod,caret-hint,QB,prevent-pseudo-domain,lo"
+let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,hatenaStar,multi_requester,pino,proxy,sbmcommentsviewer,tombloo,walk-input,stella,opener,heuristic-search,bitly,x-hint,auto_source,spatial-navigation,reload-image,loginManager,statusline-toolbar,ldrize_cooperation,migemo_completion,hint-tombloo-mod,caret-hint,QB,prevent-pseudo-domain,lo,google-plus-commando"
+
+" google-plus-commando.js
+let g:gplus_commando_map_next            = "j"
+let g:gplus_commando_map_prev            = "k"
+let g:gplus_commando_map_share           = "s"
+let g:gplus_commando_map_plusone         = "p"
+let g:gplus_commando_map_comment         = "c"
+let g:gplus_commando_map_post            = "C"
+let g:gplus_commando_map_yank            = "y"
+let g:gplus_commando_map_notification    = "n"
 
 " spatial-navigation.js
 let g:spatial_navigation_mappings = "<C-M-h> <C-M-j> <C-M-k> <C-M-l>"
@@ -272,6 +282,7 @@ lazy fmaps -u='^https?://mail\.google\.com/(mail|a)/' c j k n p o u e x s r a # 
 " lazy fmaps -u='^chrome://iviewfx/content/iview\.html' j k s a z o i,tj p
 " はてブ
 lazy fmaps -u='^http://b\.hatena\.ne\.jp/(?!(entry|articles|guide))' j k o,oj e a,b
+nnoremap -u='^http://b\.hatena\.ne\.jp/(?!(entry|articles|guide))' a :xh a //*[contains(concat(" ",normalize-space(@class)," "), " current-element ")]/a<CR>
 " pixiv staccfeed
 lazy fmaps -u='^http://www\.pixiv\.net/stacc/' i,<S-u>j e,<S-u>k
 
@@ -319,25 +330,40 @@ gBrowser.addTab = liberator.eval(
     gBrowser.addTab);
 EOM
 
-" Greasemonkey 0.9.1 patch
-" cf.http://d.hatena.ne.jp/wlt/20110130/1296359063
+" autocmd 駆動時のエコーをやめる
+" cf.http://vimperator.g.hatena.ne.jp/nokturnalmortum/20110616/1308191737
 js <<EOM
-autocommands.add('VimperatorEnter', '.*',
-  function() {
-    let gm = Components.classes['@greasemonkey.mozdev.org/greasemonkey-service;1'];
-    if (gm) {
-      gm = gm.getService().wrappedJSObject;
-      if (gm.injectScripts.toSource().search('sharedWindow') == -1) {
-          gm.injectScripts = liberator.eval(
-              gm.injectScripts.toSource()
-                  .replace(/(?=var firebugConsole)/,
-                          'var sharedWindow = {};' +
-                          'sharedWindow.window = sharedWindow;' +
-                          'sharedWindow.__proto__ = new XPCNativeWrapper(unsafeContentWin);')
-                  .replace(/(?=sandbox\.__proto__)/, ' sandbox.window = sharedWindow;'),
-              gm.injectScripts);
-      }
-    }
+let (original = liberator.echomsg)
+  liberator.echomsg = function (msg) {
+    const REAC = RegExp('@chrome://liberator/content/autocommands\\.js:\\d+');
+    if (Error().stack.split(/\n/).some(RegExp.prototype.test.bind(REAC)) && /Executing .* Auto commands for .*/.test(msg))
+      liberator.log(msg);
+    else
+      original.apply(liberator, arguments);
+  };
+EOM
+
+" Greasemonkey 0.9.1 patch
+" cf.http://d.hatena.ne.jp/littlefolk/20110625/p1
+js <<EOM
+autocommands.add(
+  'VimperatorEnter', '.*',
+  function () {
+    let Cc = Components.classes['@greasemonkey.mozdev.org/greasemonkey-service;1'] ||
+             Components.classes['@scriptish.erikvold.com/scriptish-service;1'];
+    if (Cc) {
+      Cc = Cc.getService().wrappedJSObject;
+      if (Cc.injectScripts.toSource().search('sharedWindow') == -1) {
+        Cc.injectScripts = liberator.eval(
+          Cc.injectScripts.toSource()
+            .replace(/(?=(?:var|let) (?:firebugConsole|fbConsole))/,
+              'var sharedWindow = {};' +
+              'sharedWindow.window = sharedWindow;' +
+              'sharedWindow.__proto__ = new XPCNativeWrapper(unsafeContentWin);')
+            .replace(/(?=sandbox\.__proto__)/, ' sandbox.window = sharedWindow;'),
+        Cc.injectScripts);
+      };
+    };
   });
 EOM
 
@@ -357,7 +383,7 @@ color hint
 style -name liberator-statusline chrome://* #liberator-statusline, #liberator-commandline { -moz-box-align: center; }
 
 " toolbarbutton
-style -name liberator-customize-toolbar chrome://* #liberator-customize-toolbar { -moz-appearance: none !important; }
+" style -name liberator-customize-toolbar chrome://* #liberator-customize-toolbar { -moz-appearance: none !important; }
 style -name toolbarbutton-feed-icon chrome://* #liberator-customize-toolbar > #feed-button { border: none !important; background: none !important; min-width: 0 !important; padding: 0 !important; }
 
 " ex mode時IMEをOFF
