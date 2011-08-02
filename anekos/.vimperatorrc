@@ -1,16 +1,8 @@
 " vim: ft=vimperator sw=2 sts=2 fdm=marker
 
-" pre                                                                        {{{
-command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
-
-" }}}
-
 " let                                                                        {{{
 
 let mapleader = ","
-
-" pluginloader
-let g:plugin_loader_roots = "C:/root/external/vimpr/vimperator-plugins/ c:/root/home/anekos/vimperator/default/ex-plugin/"
 
 " center line
 let g:asdfghjkl_default = "true"
@@ -25,7 +17,7 @@ let g:pinoOpenInterval = 1000
 let g:pinoBaseURL = "http://fastladder.com"
 
 " appendAnchor
-let g:auto_append_anchor = 1
+let g:auto_append_anchor = 0
 let g:auto_append_anchor_once = 1
 
 " multi_requester.js
@@ -39,10 +31,15 @@ let g:twittperator_use_chirp = 1
 let g:twittperator_screen_name = "anekos"
 let g:twittperator_history_limit = 5000
 
+let g:twittperator_plugin_sstp = 0
+let g:twittperator_plugin_setuden = 0
 let g:twittperator_plugin_urusai_namakubi = 0
 let g:twittperator_plugin_echo_tweet = 0
 let g:twittperator_plugin_reply_popup_alert = 0
 let g:twittperator_plugin_twlist_win = 0
+let g:twittperator_plugin_pong = 1
+let g:twittperator_plugin_colorful_log_writer = 1
+let g:twittperator_plugin_add_url_completer = 1
 
 " prefix of commanded bookmarkelts
 let g:command_bookmarklet_prefix = ""
@@ -81,14 +78,34 @@ let g:statstat_interval = "500"
 " sessoin-manager
 let g:session_manager_ignore_auto = 1
 
-" }}}
+" win-mouse
+let g:win_mouse_map_move_left    = "<A-h>"
+let g:win_mouse_map_move_right   = "<A-l>"
+let g:win_mouse_map_move_up      = "<A-k>"
+let g:win_mouse_map_move_down    = "<A-j>"
+let g:win_mouse_map_left_click   = "<A-q>"
+let g:win_mouse_map_middle_click = "<A-w>"
+let g:win_mouse_map_right_click  = "<A-e>"
+let g:win_mouse_auto_blur        = 500
 
-" alias                                                                      {{{
+" maine_coon
+let g:maine_coon_default = "amu"
 
-lazy alias e echo
-lazy alias ri reloadimage
-lazy alias vc videocontrol
-lazy alias p panorama
+" read it later
+let g:readitlater_open_as_read = 1
+let g:readitlater_get_count = 500
+
+" google plus commado
+let g:gplus_commando_map_next            = "j"
+let g:gplus_commando_map_prev            = "k"
+let g:gplus_commando_map_share           = "s"
+let g:gplus_commando_map_plusone         = "p"
+let g:gplus_commando_map_comment         = "c"
+let g:gplus_commando_map_post            = "C"
+let g:gplus_commando_map_yank            = "y"
+let g:gplus_commando_map_notification    = "n"
+let g:gplus_commando_map_cancel          = "<Esc>"
+let g:gplus_commando_map_unfold          = "e"
 
 " }}}
 
@@ -96,8 +113,8 @@ lazy alias p panorama
 
 set scrollbars
 set notabnumbers
-lazy set gui=addons,tabs,menu
-lazy js document.getElementById('toolbar-menubar').collapsed = true
+set status=tabcount,position,input,location
+set history=5000
 
 " }}}
 
@@ -109,7 +126,8 @@ set! javascript.options.showInConsole=true
 set! browser.dom.window.dump.enabled=true
 
 " ページのアクセスキーを無効化
-" set! ui.key.generalAccessKey=0
+set! ui.key.generalAccessKey=0
+set! ui.key.contentAccessKey=0
 
 " Awesomebarの補完対象にBookmarkletを追加、件数を50件に変更
 " set! browser.urlbar.filter.javascript=false
@@ -137,9 +155,6 @@ set! browser.tabs.closeButtons=3
 " IPv6 無効化
 " set! network.dns.disableIPv6=true
 
-" RAM Disk
-set! browser.cache.disk.parent_directory=R:\\firefox
-
 " undo limit
 set! browser.sessionstore.max_tabs_undo=100
 
@@ -154,8 +169,13 @@ set! browser.tabs.loadInBackground=false
 " set! javascript.options.jit.content=true
 
 " 拡張機能のバージョンチェックを回避
-" set! extensions.checkCompatibility=false
+set! extensions.checkCompatibility.4.0=false
 set! extensions.checkCompatibility.4.0b=false
+set! extensions.checkCompatibility.4.1b=false
+set! extensions.checkCompatibility.4.2a=false
+set! extensions.checkCompatibility.4.2b=false
+set! extensions.checkCompatibility.5.0=false
+set! extensions.checkCompatibility.5.1=false
 
 " キャッシュサイズ
 set! browser.cache.memory.capacity=32768
@@ -170,28 +190,20 @@ set! extensions.sessionmanager.resume_session="backup.session"
 " 以前の値、有効にすると、jquery.com に接続できなくなる。
 " set! intl.accept_languages="en-US,en,ja-JP,ja,chrome://global/locale/intl.properties"
 
-" ダウロードマネージャを表示しない
-set! browser.download.manager.showWhenStarting=false
-set! browser.download.dir='E:\temp\download\firefox'
-set! browser.download.lastDir='E:\temp\download\firefox'
-
-" UserAgent
-set! general.useragent.extra.firefox="Firefox/4.0"
-
-" OOPP 全有効にする設定
-set! dom.ipc.plugins.enabled=false
-
-" OOPP プラグイン毎の設定
-set! dom.ipc.plugins.enabled.npctrl.dll=true
-set! dom.ipc.plugins.enabled.npqtplugin.dll=true
-set! dom.ipc.plugins.enabled.npswf32.dll=true
-set! dom.ipc.plugins.enabled.nptest.dll=true
-
 " 0 にすると、バックグラウンドでタブを読み込まない (デフォルトは -1)
 " set! browser.sessionstore.max_concurrent_tabs=3
 
 " 最後のタブを閉じたときに Firefox を終了しない
 set! browser.tabs.closeWindowWithLastTab=false
+
+" 起動時に前回のセッションを復元
+set! browser.startup.page=3
+
+" XXX HTTP/1.1 パイプリング
+set! network.http.pipelining=true
+
+" XXX GIF アニメ (once / normal / none)
+set! image.animation_mode="normal"
 
 " }}}
 
@@ -231,6 +243,11 @@ nnoremap p P
 nnoremap gop p
 nnoremap gnp P
 
+" 拡大縮小後に位置を戻す
+nnoremap zi mzzi`z
+nnoremap zo mzzo`z
+nnoremap zz mzzz`z
+
 " }}}
 
 " Mappings (Local)                                                           {{{
@@ -240,6 +257,10 @@ nnoremap gnp P
 " 画像のばやい - 拡縮
 nnoremap -urls '\.(jpg|png|gif)$' zi zI
 nnoremap -urls '\.(jpg|png|gif)$' zo zO
+
+" win-mouse
+nnoremap -urls=www\\.slideshare\\.net l :mouse elem -x=340 -y=460 -click=left -index=0 -blur //embed<CR>
+nnoremap -urls=www\\.slideshare\\.net h :mouse elem -x=255 -y=460 -click=left -index=0 -blur //embed<CR>
 
 " }}}
 
@@ -286,6 +307,11 @@ nnoremap <Leader>R :<C-u>js<Space>Readability.enableREADABILITY({target: {id: 'r
 " vim の設定ぽく
 nnoremap <Leader>b :<C-u>buffer<Space>
 
+" read it later
+nnoremap <Leader>n :ril open<Space>
+nnoremap <Leader>l :ril add<Space>
+
+
 " }}}
 
 " Mappings                                                                   {{{
@@ -301,12 +327,6 @@ cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 cnoremap <C-k> <Up>
 cnoremap <C-l> <Down>
-
-" もげ
-" cnoremap <C-i> <Tab>
-
-" テスト用
-nnoremap <A-t> :<C-u>aso ~/vimperator/default/plugin/temp.js<CR>
 
 " echo and echopy
 noremap e :<C-u>echo<Space>
@@ -360,39 +380,8 @@ nnoremap ZZ :<C-u>zoomall<CR>
 " 直前のタブを削除
 nnoremap <Leader>dd :<C-u>js<Space>tabs.remove(tabs.alternate)<CR>
 
-" }}}
-
-" feedSomeKeys_3                                                             {{{
-
-" GMail
-lazy fmaps -u='mail\.google\.com/mail' -events=vkeydown,keypress,vkeyup j k
-lazy fmaps -u='mail\.google\.com/mail' c n p o u x s r a ? gi gs gt gd ga gc I
-lazy fmaps -u='mail\.google\.com/mail' -p=<Leader> d,# s,! e
-lazy fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' c j,n k,p n,j p,k o u x s r a ? gi gs gt gd ga gc
-lazy fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' -p=<Leader> d,# s,! e
-
-" GReader
-lazy fmaps -u='www\.google\.co\.jp/reader' -events=vkeypress j k n p m s v A r S N P X O gh ga gs gt gu u / ? J K
-
-" LDR
-lazy fmaps -u='(fastladder|livedoor)\.com/reader' j k s a p o v c i,p <Space> <S-Space> z < > e,g
-lazy fmaps -u='(fastladder|livedoor)\.com/reader' q w
-
-" Google Code
-lazy fmaps -u='http://code.google.com/p/vimperator-labs/issues/list' o j k
-lazy fmaps -u='http://code.google.com/p/vimperator-labs/issues/detail' u
-
-" Remember The Milk
-lazy fmaps -u='https?://www\.rememberthemilk\.com/home/' j k m i c ? G,g S,s Y,y M,m <Del>
-lazy fmaps -u='https?://www\.rememberthemilk\.com/home/' -p=<Leader> 1 2 3 4 f t h l d r
-
-" LDRize
-lazy fmaps J,j K,k P,p I,p
-
-" new Twitter
-" lazy fmaps -urls='^http://twitter\.com/' j k ?
-" lazy fmaps -urls='^http://twitter\.com/' -events=vkeydown n m t r gh gr gp gf gm
-" lazy fmaps -urls='^http://twitter\.com/'  -events=keydown c,<Esc>
+" マウスカーソルを邪魔じゃないとこに飛ばす
+nnoremap <A-z> :mouse move 1800 10000<CR>
 
 " }}}
 
@@ -400,6 +389,7 @@ lazy fmaps J,j K,k P,p I,p
 
 colorscheme theme
 colorscheme persona
+colorscheme tab-numbers
 
 colorscheme fix-addon
 colorscheme fix-sites
@@ -409,11 +399,12 @@ colorscheme fix-firefox
 
 " QuickMarks                                                                 {{{
 
+
 silent qmark a http://a.hatena.ne.jp/anekosp/
-silent qmark b https://mail.google.com/mail/?shva=1#buzz
 silent qmark B http://bit.ly/
+silent qmark b https://mail.google.com/mail/?shva=1#buzz
+silent qmark c https://catch.com/m/
 silent qmark d http://d.hatena.ne.jp/nokturnalmortum/
-silent qmark e http://userscripts.org/scripts/show/22702
 silent qmark f http://fastladder.com/reader/
 silent qmark g https://mail.google.com/mail/#mbox
 silent qmark h http://www.google.co.jp/ig
@@ -421,14 +412,11 @@ silent qmark l http://reader.livedoor.com/reader/
 silent qmark m http://mixi.jp/home.pl
 silent qmark o https://www.ohloh.net/accounts/anekos
 silent qmark r http://www.rememberthemilk.com/
-silent qmark s http://springpadit.com/springpad/#home
 silent qmark R http://www.rememberthemilk.com/home/anekosp/#section.tasks
-silent qmark t http://www.tumblr.com/dashboard
+silent qmark s http://springpadit.com/springpad/#home
 silent qmark T http://anekos.tumblr.com/
+silent qmark t http://www.tumblr.com/dashboard
 silent qmark w http://twitter.com/home
-silent qmark W http://twitter.com/#retweeted_of_mine
-silent qmark z http://vimperator.kurinton.net/plugins/
-
 
 " }}}
 
@@ -443,7 +431,7 @@ command! -nargs=+ sitesearch :exe ":tabopen <args> site:" + content.document.dom
 command! -nargs=1 feed subscrfl -rate=<args>
 command! ramen -nargs=1 delay -interval=<args>m namakubi できたぞ、くえよ、しぬぞ
 " 選択範囲内のリンクを開く
-command! sopen js [buffer.followLink(a) for (a in util.evaluateXPath("//a")) if (content.window.getSelection().containsNode(a, true))]
+command! sopen js [liberator.open(a.href, liberator.NEW_BACKGROUND_TAB) for (a in util.evaluateXPath("//a")) if (content.window.getSelection().containsNode(a, true))]
 command! sum echo let (sum=0) (util.readFromClipboard().match(/\d+/g).map(function(s) parseInt(s)).forEach(function(v) sum+=v),sum)
 " command! googlesidewiki js document.getElementById('gtbSidewiki').click()
 command! webcon :emenu Tools.Web Console
@@ -459,6 +447,7 @@ abbr jager          JagerMonkey
 abbr #v             #vimperator
 abbr pen            pentadactyl
 abbr #pen           #pentadactyl
+cabbr .fm           http://turntable.fm/metallum #turntablefm
 
 cabbr cr            ~/../../project/coderepos/vimp-plugin/
 cabbr vr            ~/vimperator/default/
@@ -478,6 +467,12 @@ cabbr -j .amazon    let(asin=content.document.getElementById('ASIN').value,base=
 
 cabbr -j .date      (new Date).toLocaleFormat("%Y-%m-%d")
 cabbr -j .time      (new Date).toLocaleFormat("%H:%M:%S")
+
+" }}}
+
+" Style {{{
+
+style -name commandline-ime chrome://* #liberator-commandline-command input { ime-mode: inactive; }
 
 " }}}
 

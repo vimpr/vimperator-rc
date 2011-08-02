@@ -1,16 +1,16 @@
 // vim:sw=2 ts=2 et si fdm=marker ft=javascript:
 
-liberator.log('_vimperatorrc.js loading');
-
 (function () {
 
   // Plugins                                                                     {{{
   liberator.globalVariables.plugin_loader_plugins = <>
+    &#x8DF3;
     _libly
     _smooziee
+    alert
     alias
     appendAnchor
-    !asdfghjkl
+    asdfghjkl
     auto-focus-frame
     auto_detect_link
     auto_reload
@@ -19,15 +19,26 @@ liberator.log('_vimperatorrc.js loading');
     caret-hint
     commandBookmarklet
     copy
+    dc
     edit-vimperator-files
+    embed-esc
+    every
     feedSomeKeys_3
     gmail-commando
+    google-plus-commando
     google-translator
+    grep
     hatenaStar
+    hint-command
+    hint-tombloo
     hints-for-embedded
     hints-yank-paste
+    !liberator-overlay-ext
     lo
+    loginManager
+    !maine_coon
     memo
+    migemized_find
     migemo_completion
     migemo_hint
     multi-exec
@@ -35,22 +46,24 @@ liberator.log('_vimperatorrc.js loading');
     namakubi
     option-selector
     pino
-    readcatlater
+    prevent-pseudo-domain
+    readitlater
     sbmcommentsviewer
-    statstat
+    !statstat
     statusbar_panel
     stella
     subscldr
+    !piyo-ui
     tabsort
     tombloo
-    hint-tombloo
+    twittperator
     umihara
     usi
-    twittperator
     video-controller
+    walk-input
+    win-mouse
     x-hint
     zoom-em-all
-    &#x8DF3;
   </>.toString().split(/\s+/).filter(function(n) !/^!/.test(n));
   // }}}
 
@@ -206,14 +219,6 @@ liberator.log('_vimperatorrc.js loading');
 
   // }}}
 
-  // Read Cat Later                                                              {{{
-
-  commandOpenMap(['<leader>l', '<A-l>'], ':readcatlater ');
-  commandOpenMap(['<leader>n', '<leader>L', '<A-n>'], ':readcatnow ');
-  commandOpenMap(['<leader>N', '<A-N>'], ':readcatnow! ');
-
-  // }}}
-
   // Util funcitons for commandline {{{
   {
     let flasher = Cc['@mozilla.org/inspector/flasher;1'].createInstance(Ci.inIFlasher);
@@ -257,7 +262,9 @@ liberator.log('_vimperatorrc.js loading');
   commands.addUserCommand(
     ['scrap'],
     'Scrap current page by Scrapbook',
-    function () sbBrowserOverlay.execCapture(0, null, false, "urn:scrapbook:root")
+    function () ScrapBookBrowserOverlay.execCapture(0, null, false, "urn:scrapbook:root"),
+    {},
+    true
   );
 
   // }}}
@@ -275,34 +282,6 @@ liberator.log('_vimperatorrc.js loading');
         commandline.command = cmd + bang + ' ' + args;
       }
     );
-  }
-  // }}}
-
-  // kei_s さんの空気(ドメイン)を読んでマジカル・オープン {{{
-  if (1) {
-    // https://gist.github.com/600896
-    liberator.registerObserver('enter',function(){
-      let tldStr = "(?:museum|travel|aero|arpa|coop|info|jobs|name|nvus|biz|com|edu|gov|int|mil|net|org|pro|xxx|ac|ad|ae|af|ag|ai|ak|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|ct|cu|cv|cx|cy|cz|dc|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fl|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hi|hk|hm|hn|hr|ht|hu|ia|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|ks|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mi|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|nd|ne|nf|ng|nh|ni|nj|nl|nm|no|np|nr|nu|ny|nz|oh|ok|om|or|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ri|ro|ru|rw|sa|sb|sc|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tx|tz|ua|ug|uk|um|us|ut|uy|uz|va|vc|ve|vg|vi|vn|vt|vu|wa|wf|wi|ws|wv|wy|ye|yt|yu|za|zm|zw)"
-      let regexp = new RegExp("^(?:[a-zA-Z0-9-.]+\\."+tldStr+"|[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)(?:\/|$)","i");
-
-      // thanks to @anekos http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100730/1280474980
-      // See Also http://code.google.com/p/vimperator-labs/source/browse/common/content/liberator.js
-      // See Also http://code.google.com/p/vimperator-labs/source/browse/common/content/util.js
-      return;
-      plugins.libly.$U.around(
-        liberator,
-        'open',
-        function (next, args) {
-          let [urls, where, force] = args;
-          if (typeof urls == "string") {
-            if ( !/^(?:\.{0,2}|~)\//.test(urls) && /^[a-zA-Z0-9-.\/]+$/.test(urls) && !regexp.test(urls) ) {
-              args[0] = "google " + urls;
-            }
-          }
-          return next();
-        }
-      )
-    });
   }
   // }}}
 
@@ -462,9 +441,8 @@ liberator.log('_vimperatorrc.js loading');
   );
   // }}}
 
-  // Kill Menu Mode {{{
-  // imap されていないキーで無視したいものは、inoremap <C-n> <nop> などとしておく
-  if (1) {
+  if (1) { // Kill Menu Mode and shortcut keys on Hint mode {{{
+    // imap されていないキーで無視したいものは、inoremap <C-n> <nop> などとしておく
     window.addEventListener(
       'keypress',
       function (event) {
@@ -473,11 +451,11 @@ liberator.log('_vimperatorrc.js loading');
 
         if (liberator.mode === modes.COMMAND_LINE && modes.extended === modes.HINTS) {
           let key = events.toString(event);
-          if (/^<[CA]/(key))
+          if (/^<[CA]/.test(key))
             killEvent();
         }
 
-        if (liberator.mode === modes.INSERT && modes.extended === modes.MENU) {
+        if (modes.isMenuShown) {
           let key = events.toString(event);
           if (key == '<Space>')
             return;
@@ -534,31 +512,6 @@ liberator.log('_vimperatorrc.js loading');
         readability();
       },
       {}
-    );
-  }
-  // }}}
-
-  // ;F 連ヒントをバッファする {{{
-  if (1) {
-    liberator.registerObserver(
-      'enter',
-      function () {
-        let scheduled = [];
-        plugins.libly.$U.around(
-          events,
-          'onEscape',
-          function (next) {
-            try {
-              if (scheduled.length)
-                scheduled.forEach(function (elem) buffer.followLink(elem, liberator.NEW_BACKGROUND_TAB));
-            } finally {
-              scheduled = [];
-              return next();
-            }
-          }
-        );
-        hints._hintModes['F'].action = function (elem) (liberator.log(elem),scheduled.push(elem), hints.show("F"));
-      }
     );
   }
   // }}}
@@ -645,10 +598,62 @@ liberator.log('_vimperatorrc.js loading');
     );
   } // }}}
 
+  if (1) { // win-mouse なヒント追加 {{{
+    hints.addMode(
+      'w',
+      'Move cursor',
+      function (elem) plugins.winMouse.API.move({elem: elem}),
+      function () '//img|//a|//span|//object|//embed'
+    );
+    hints.addMode(
+      'W',
+      'Move and click cursor',
+      function (elem) plugins.winMouse.API.click({elem: elem}),
+      function () '//img|//a|//span|//object|//embed'
+    );
+  } // }}}
+
+  if (1) { // liberator-overlay-ext の透過トグル {{{
+    mappings.addUserMap(
+      [modes.COMMAND_LINE],
+      ['<C-g>', '<C-t>'],
+      'Toggle commandline transparency',
+      function () plugins.liberatorOverlayExt.toggleShowBackground()
+    );
+  } // }}}
+
+  if (1) { // autocmd を echomsg しないようにする {{{
+    let (original = liberator.echomsg)
+      liberator.echomsg = function (msg) {
+        const REAC = RegExp('@chrome://liberator/content/autocommands\\.js:\\d+');
+        if (Error().stack.split(/\n/).some(RegExp.prototype.test.bind(REAC)) && /Executing .* Auto commands for .*/.test(msg))
+          liberator.log(msg);
+        else
+          original.apply(liberator, arguments);
+      };
+  } // }}}
+
+  if (1) { // :mess の出力をコピーする {{{
+    commands.addUserCommand(
+      ['messcopy'],
+      'Copy messages to clipboard',
+      function () {
+        util.copyToClipboard(
+          commandline._messageHistory._messages.map(
+            function(it)
+              let (v = it.str) (
+                typeof v === 'xml'    ? v.textContent :
+                typeof v === 'object' ? (v + "\n" + v.stack) :
+                v
+              )
+          ).join("\n\n")
+        );
+      },
+      {},
+      true
+    );
+  } // }}}
 
 })();
 
-
-liberator.log('_vimperatorrc.js loaded');
-liberator.registerObserver('enter', function () liberator.echo('Initialized.'));
 

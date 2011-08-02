@@ -1,0 +1,57 @@
+
+" alias                                                                      {{{
+
+alias e echo
+alias ri reloadimage
+alias vc videocontrol
+alias p panorama
+
+" }}}
+
+" GUI {{{
+
+set gui=addons,tabs
+"js document.getElementById('toolbar-menubar').collapsed = true
+
+" }}}
+
+" feedSomeKeys_3                                                             {{{
+
+" GMail
+fmaps -u='mail\.google\.com/mail' -events=vkeydown,keypress,vkeyup j k
+fmaps -u='mail\.google\.com/mail' c n p o u x s r a ? gi gs gt gd ga gc I
+fmaps -u='mail\.google\.com/mail' -p=<Leader> d,# s,! e
+fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' c j,n k,p n,j p,k o u x s r a ? gi gs gt gd ga gc
+fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' -p=<Leader> d,# s,! e
+
+" GReader
+fmaps -u='www\.google\.co\.jp/reader' -events=vkeypress j k n p m s v A r S N P X O gh ga gs gt gu u / ? J K
+
+" LDR
+fmaps -u='(fastladder|livedoor)\.com/reader' j k s a p o v c i,p <Space> <S-Space> z < > e,g
+fmaps -u='(fastladder|livedoor)\.com/reader' q w
+
+" Google Code
+fmaps -u='http://code.google.com/p/vimperator-labs/issues/list' o j k
+fmaps -u='http://code.google.com/p/vimperator-labs/issues/detail' u
+
+" Remember The Milk
+fmaps -u='https?://www\.rememberthemilk\.com/home/' j k m i c ? G,g S,s Y,y M,m <Del>
+fmaps -u='https?://www\.rememberthemilk\.com/home/' -p=<Leader> 1 2 3 4 f t h l d r
+
+" LDRize
+fmaps J,j K,k P,p I,p
+
+" new Twitter
+fmaps -urls='^https?://twitter\.com/' j k ?
+fmaps -urls='^https?://twitter\.com/' -events=vkeydown m r gh gr gp gf gm
+fmaps -urls='^https?://twitter\.com/' -events=keydown c,<Esc>
+
+" INSERT
+fmaps -modes=i -events=keypress,keydown <C-p>,<Up> <C-n>,<Down>
+
+" }}}
+
+" set {{{
+set complete=sl
+" }}}

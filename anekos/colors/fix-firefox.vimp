@@ -13,6 +13,18 @@
 "  }
 "EOM
 
+" タブ関連のボタンなど削除
+" URLのロード中表示などを巨大化
+style -name fix-firefox chrome://* <<EOM
+  .alltabs-button, .new-tab-button, .tabview-button, #tabs-closebutton {
+    display: none !important;
+  }
+
+  #statusbar-display {
+    font-size: 2em;
+  }
+EOM
+
 " サイドバーを右端に移動する
 js <<EOM
   let (b = document.getElementById('browser'), sbb = document.getElementById('sidebar-box'),
@@ -23,3 +35,23 @@ js <<EOM
     b.appendChild(sbb);
   }
 EOM
+
+
+" URL表示の移動
+js <<EOM
+  let (
+    spring = document.querySelector('#addon-bar > toolbarspring'),
+    status = document.getElementById('liberator-status'),
+    addonbar = document.getElementById('addon-bar')
+  ) {
+    addonbar.insertBefore(status, spring)
+  }
+EOM
+
+js <<EOM
+  let (elem = window.document.getElementById('tabview-button'))
+    (elem && (elem.collapsed = true));
+  window.document.getElementById('alltabs-button').collapsed = true
+EOM
+
+hi StatusLine -a text-align: start;
