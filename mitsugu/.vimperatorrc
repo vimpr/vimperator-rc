@@ -1,6 +1,6 @@
 js <<EOM
 liberator.globalVariables.onclickTable={
-  'github':'//span[@class="toggle"][1]',
+  'github':'//span[@class="minibutton switcher account-switcher js-account-switcher"][1]',
   'jamendo':'//a[@title="Add to favorites"]',
   'tpprev':'//span[@class="comment_pagination_prev pagination_item"][1]',
   'tpnext':'//span[@class="comment_pagination_next pagination_item"][1]'
