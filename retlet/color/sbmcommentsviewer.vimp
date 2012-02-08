@@ -5,6 +5,7 @@
 "hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-timestamp opacity: .6; font-size: smaller;
 "hi CompGroup.liberator-sbmcommentsviewer>div>:last-child margin-right: 0;
 
+hi Message padding-left: 0; text-indent: 0;
 
 hi CompGroup.liberator-sbmcommentsviewer <<EOM
   font-size: 14px;
@@ -12,7 +13,6 @@ hi CompGroup.liberator-sbmcommentsviewer <<EOM
 EOM
 
 hi CompGroup.liberator-sbmcommentsviewer>:not(:first-child) <<EOM
-  -moz-box-sizing: border-box;
 EOM
 
 hi CompGroup.liberator-sbmcommentsviewer>div>span <<EOM
