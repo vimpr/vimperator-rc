@@ -3,6 +3,7 @@
 " let                                                                        {{{
 
 let mapleader = ","
+nmap s <Leader>
 
 " center line
 let g:asdfghjkl_default = "true"
@@ -14,7 +15,7 @@ let g:ex_ime_mode = "inactive"
 
 " pino.js
 let g:pinoOpenInterval = 1000
-let g:pinoBaseURL = "http://fastladder.com"
+let g:pinoBaseURL = "http://reader.livedoor.com"
 
 " appendAnchor
 let g:auto_append_anchor = 0
@@ -30,6 +31,9 @@ let g:hints_copy_maps = "k K <nop> <nop>"
 let g:twittperator_use_chirp = 1
 let g:twittperator_screen_name = "anekos"
 let g:twittperator_history_limit = 5000
+let g:twittperator_use_ssl_connection_for_api_ep = 1
+let g:twittperator_lang = "ja"
+let g:twittperator_count = 50
 
 let g:twittperator_plugin_sstp = 0
 let g:twittperator_plugin_setuden = 0
@@ -40,6 +44,14 @@ let g:twittperator_plugin_twlist_win = 0
 let g:twittperator_plugin_pong = 1
 let g:twittperator_plugin_colorful_log_writer = 1
 let g:twittperator_plugin_add_url_completer = 1
+let g:twittperator_plugin_anti_goji = 1
+let g:twittperator_plugin_twsidebar = 1
+let g:twittperator_plugin_eject_alert = 1
+let g:twittperator_plugin_eject_alert_device = '/dev/sr1'
+let g:twittperator_plugin_ril = 1
+let g:twittperator_plugin_mstrans = 1
+let g:twittperator_plugin_copy = 1
+let g:twittperator_plugin_twsidebar_expand_url = 1
 
 " prefix of commanded bookmarkelts
 let g:command_bookmarklet_prefix = ""
@@ -89,7 +101,8 @@ let g:win_mouse_map_right_click  = "<A-e>"
 let g:win_mouse_auto_blur        = 500
 
 " maine_coon
-let g:maine_coon_default = "amu"
+let g:maine_coon_default = "am"
+let g:maine_coon_style = "height: 1em; margin: 0; padding: 3px; border: 1px solid #b3b3b3; border-left: 0; border-bottom: 0; text-align: left; color: #000; font: 21px/1 sans-serif; background: #ebebeb;"
 
 " read it later
 let g:readitlater_open_as_read = 1
@@ -103,9 +116,31 @@ let g:gplus_commando_map_plusone         = "p"
 let g:gplus_commando_map_comment         = "c"
 let g:gplus_commando_map_post            = "C"
 let g:gplus_commando_map_yank            = "y"
-let g:gplus_commando_map_notification    = "n"
+let g:gplus_commando_map_notification    = ",n"
 let g:gplus_commando_map_cancel          = "<Esc>"
 let g:gplus_commando_map_unfold          = "e"
+let g:gplus_commando_map_submit          = "<C-CR>"
+let g:gplus_commando_map_menu            = ",m"
+let g:gplus_commando_map_mute            = "M"
+let g:gplus_commando_map_open            = "o"
+
+" direct_bookmark
+let g:direct_sbm_use_services_by_tag  = "l"
+let g:direct_sbm_use_services_by_post = "pgl"
+let g:direct_sbm_is_use_migemo        = 1
+let g:direct_sbm_is_normalize         = 1
+let g:direct_sbm_tag_match            = "infix"
+
+" ldc-completer
+let g:ldc_completer_use_migemo = 1
+let g:ldc_completer_prefix = ";"
+
+" auto-bookmark
+let g:auto_bookmark_focus_next = 0
+
+" walk-input
+let g:walk_input_map_forward = '<C-,>'
+let g:walk_input_map_backward = '<C-.> <C-S-,>'
 
 " }}}
 
@@ -113,8 +148,9 @@ let g:gplus_commando_map_unfold          = "e"
 
 set scrollbars
 set notabnumbers
-set status=tabcount,position,input,location
+set status=tabcount,bookmark,position,input,location
 set history=5000
+set newtab=all
 
 " }}}
 
@@ -176,6 +212,14 @@ set! extensions.checkCompatibility.4.2a=false
 set! extensions.checkCompatibility.4.2b=false
 set! extensions.checkCompatibility.5.0=false
 set! extensions.checkCompatibility.5.1=false
+set! extensions.checkCompatibility.6.0=false
+set! extensions.checkCompatibility.6.1=false
+set! extensions.checkCompatibility.7.0=false
+set! extensions.checkCompatibility.7.1=false
+set! extensions.checkCompatibility.8.0=false
+set! extensions.checkCompatibility.8.1=false
+set! extensions.checkCompatibility.9.0a=false
+set! extensions.checkCompatibility.9.1=false
 
 " キャッシュサイズ
 set! browser.cache.memory.capacity=32768
@@ -216,8 +260,10 @@ set! extensions.scriptish.useDefaultLocale=true
 " Mappings (Override)                                                        {{{
 
 " for US KBD
-noremap ; :
-noremap : ;
+nnoremap : ;
+nnoremap ; :
+vnoremap : ;
+vnoremap ; :
 
 " j/k でのスクロール幅を 1行 から 5行 に変更
 nnoremap j 5<C-e>
@@ -243,14 +289,27 @@ nnoremap p P
 nnoremap gop p
 nnoremap gnp P
 
+" for MyBookmarsk
+nnoremap gob :<C-u>open about:mybookmarks<CR>
+nnoremap gnb :<C-u>tabopen about:mybookmarks<CR>
+
 " 拡大縮小後に位置を戻す
 nnoremap zi mzzi`z
 nnoremap zo mzzo`z
 nnoremap zz mzzz`z
 
+" direct_bookmark
+nnoremap a :sbm<Space>
+
+" 閉じちゃだめ
+cnoremap <C-q> <Nop>
+
+" 怖い
+nnoremap q <Nop>
+
 " }}}
 
-" Mappings (Local)                                                           {{{
+" Mappings (Site Local)                                                           {{{
 
 "nnoremap -urls='^http://www\.tumblr\.com/(dashboard|tumblelog|show)' <Silent> f :xh t //*[@class="quote_source"]//a[not(@class="tumblr_blog")]|//*[@class="caption"]//a[not(@class="tumblr_blog")]<CR>
 
@@ -259,8 +318,21 @@ nnoremap -urls '\.(jpg|png|gif)$' zi zI
 nnoremap -urls '\.(jpg|png|gif)$' zo zO
 
 " win-mouse
-nnoremap -urls=www\\.slideshare\\.net l :mouse elem -x=340 -y=460 -click=left -index=0 -blur //embed<CR>
-nnoremap -urls=www\\.slideshare\\.net h :mouse elem -x=255 -y=460 -click=left -index=0 -blur //embed<CR>
+nnoremap -urls=www\\.slideshare\\.net l :slideshare next<CR>
+nnoremap -urls=www\\.slideshare\\.net h :slideshare prev<CR>
+
+" Google+
+nnoremap -urls '^https://plus\.google\.com/\d+/[a-z]+$' gu 2gu
+
+" refe
+nnoremap -urls '^http://doc\.okkez\.net/' o :refe<Space>
+nnoremap -urls '^http://doc\.okkez\.net/' t :trefe<Space>
+
+" Google Search
+" nnoremap -urls '^https://www\.google\.co\.jp/search\?' f :gr<Space>
+
+" PDF.js.js
+nnoremap -urls \.pdf$ i :<C-u>pdfjs index<Space>
 
 " }}}
 
@@ -274,35 +346,49 @@ nnoremap <Leader>tt :<C-u>tombloo<Space>
 nnoremap <Leader>o :<C-u>lo<Space>
 nnoremap <Leader>O :<C-u>lo<Space>-w=t<Space>
 
+" panorama.js
+nnoremap <Leader>q :panorama<Space>
+
 " twittperator.js
 nnoremap <Leader>ww :<C-u>tw<Space>
 nnoremap <Leader>wr :<C-u>tw<Space>@
 nnoremap <Leader>wR :<C-u>tw<Space>RT<Space>@
-
-" panorama.js
-nnoremap <Leader>q :panorama<Space>
-
 nnoremap <Leader>W  :<C-u>tw!<Space>
 nnoremap <Leader>w@ :<C-u>tw!@
 nnoremap <Leader>wa :<C-u>tw!@
+nnoremap <Leader>wA :<C-u>tw!sbm<Space>
 nnoremap <Leader>wf :<C-u>tw!+
 nnoremap <Leader>w? :<C-u>tw!?
 nnoremap <Leader>w/ :<C-u>tw!/
+nnoremap <Leader>wc :<C-u>tw!copy<Space>
 nnoremap <Leader>wi :<C-u>tw!info<Space>
 nnoremap <Leader>wt :<C-u>tw!track<Space>
 nnoremap <Leader>wT :<C-u>tw!thread<Space>
 nnoremap <Leader>wd :<C-u>tw!delete<Space>
 nnoremap <Leader>wh :<C-u>tw!home<Space>
+nnoremap <Leader>ws :<C-u>tw!status<Space>
+nnoremap <Leader>wl :<C-u>tw!ril<Space>
+
+nnoremap <Leader>w1 :<C-u>tws<Space>tab<Space>0<CR>
+nnoremap <Leader>w2 :<C-u>tws<Space>tab<Space>1<CR>
+nnoremap <Leader>w3 :<C-u>tws<Space>tab<Space>2<CR>
+nnoremap <Leader>w4 :<C-u>tws<Space>tab<Space>3<CR>
+nnoremap <Leader>w5 :<C-u>tws<Space>tab<Space>4<CR>
 
 " 各コマンド呼び出し
 nnoremap <Leader>h :<C-u>hsearch<Space>
 nnoremap <Leader>H :<C-u>hcopy<Space>
 nnoremap <Leader>s :<C-u>viewSBMComments -type htdl -format=id,comment<CR>
 nnoremap <Leader>g :<C-u>gmail<Space>
-nnoremap <Leader>G :<C-u>gtrans<Space>
-nnoremap <Leader>a :<C-u>applaunch<Space>
+nnoremap <Leader>G :<C-u>mstrans<Space>
+nnoremap <Leader>A :<C-u>applaunch<Space>
 nnoremap <Leader>p :<C-u>pino<Space>
-nnoremap <Leader>R :<C-u>js<Space>Readability.enableREADABILITY({target: {id: 'readability-statusbar-icon'}})<CR>
+
+" AutoBookmark
+nnoremap <Leader>aa :<C-u>autobookmark<Space>
+nnoremap <Leader>ac :<C-u>autobookmark continue<Space>
+nnoremap <Leader>as :<C-u>autobookmark start<Space>
+nnoremap <Leader>ar :<C-u>autobookmark remove<Space>
 
 " vim の設定ぽく
 nnoremap <Leader>b :<C-u>buffer<Space>
@@ -311,6 +397,14 @@ nnoremap <Leader>b :<C-u>buffer<Space>
 nnoremap <Leader>n :ril open<Space>
 nnoremap <Leader>l :ril add<Space>
 
+" my-style
+nnoremap <Leader>ms :mystyle set<Space>
+nnoremap <Leader>mu :mystyle unset<Space>
+nnoremap <Leader>mp :mystyle permanent<CR>
+
+" Cleary
+nnoremap <Leader>c :js __readable_by_evernote.readable_by_evernote__menu__call(buffer.URL)<CR>
+nnoremap <Leader>C :js __readable_by_evernote.__readable_by_evernote__launch(true);<CR>
 
 " }}}
 
@@ -337,7 +431,7 @@ nnoremap w :<C-u>mr<Space>
 nnoremap W :<C-u>mr!<Space>
 
 " <C-k> で検索ページにいくのがウザイので無効化
-nnoremap <C-k> <Nop>
+" nnoremap <C-k> <Nop>
 
 " INSERT モードでよくまつがえて押すので…
 inoremap <C-r> <C-i>
@@ -345,15 +439,8 @@ inoremap <C-r> <C-i>
 " Undo
 nnoremap U :<C-u>undo<Space>
 
-" marker_reader
-nnoremap > :<C-u>mnext<CR>
-nnoremap < :<C-u>mprev<CR>
-
 " コピーする
 vnoremap y :<C-u>copy %SEL%<CR>
-
-" 検索
-nnoremap s :<C-u>tabopen<Space>,
 
 " タブの移動
 nnoremap <A-C-j> :<C-u>tabmove! +1<CR>
@@ -363,9 +450,9 @@ nnoremap <A-C-k> :<C-u>tabmove! -1<CR>
 cnoremap <C-i> <Tab>
 cnoremap <S-C-i> <S-Tab>
 
-" for kill-menu-mode.js
-inoremap <C-n> <Down>
-inoremap <C-p> <Up>
+" for kill-menu-mode.js (XXX see fmaps at .vimperatorrc.after)
+" inoremap <C-n> <Down>
+" inoremap <C-p> <Up>
 
 " ダウンロードマネージャ抑止
 cnoremap <C-j> <CR>
@@ -383,12 +470,15 @@ nnoremap <Leader>dd :<C-u>js<Space>tabs.remove(tabs.alternate)<CR>
 " マウスカーソルを邪魔じゃないとこに飛ばす
 nnoremap <A-z> :mouse move 1800 10000<CR>
 
+" tab-history.js
+nnoremap < :tabhistory back<CR>
+nnoremap > :tabhistory forward<CR>
+
 " }}}
 
 " カラースキーム                                                             {{{
 
 colorscheme theme
-colorscheme persona
 colorscheme tab-numbers
 
 colorscheme fix-addon
@@ -399,13 +489,13 @@ colorscheme fix-firefox
 
 " QuickMarks                                                                 {{{
 
-
 silent qmark a http://a.hatena.ne.jp/anekosp/
 silent qmark B http://bit.ly/
 silent qmark b https://mail.google.com/mail/?shva=1#buzz
 silent qmark c https://catch.com/m/
 silent qmark d http://d.hatena.ne.jp/nokturnalmortum/
-silent qmark f http://fastladder.com/reader/
+" silent qmark f http://fastladder.com/reader/
+silent qmark f http://reader.livedoor.com/reader/
 silent qmark g https://mail.google.com/mail/#mbox
 silent qmark h http://www.google.co.jp/ig
 silent qmark l http://reader.livedoor.com/reader/
@@ -413,10 +503,13 @@ silent qmark m http://mixi.jp/home.pl
 silent qmark o https://www.ohloh.net/accounts/anekos
 silent qmark r http://www.rememberthemilk.com/
 silent qmark R http://www.rememberthemilk.com/home/anekosp/#section.tasks
-silent qmark s http://springpadit.com/springpad/#home
+silent qmark s http://stackoverflow.com/users/904450/anekos
 silent qmark T http://anekos.tumblr.com/
 silent qmark t http://www.tumblr.com/dashboard
 silent qmark w http://twitter.com/home
+silent qmark x http://xmonad.org/xmonad-docs/
+silent qmark X http://dir.gmane.org/gmane.comp.lang.haskell.xmonad
+
 
 " }}}
 
@@ -425,10 +518,10 @@ command! backgroundimage :js let (doc = content.document) let (m = doc.defaultVi
 command! cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
 command! calcpluginauthor echo let c={}; $('//tr/td[3]').evaluate().map($f.textContent()).forEach(function(n){ c[n] ? c[n]+=1 : c[n] = 1 }); c
 command! dta js DTA_ContextOverlay.findLinks(false);
-command! evernote js evernote_addSelectionToEn3(null);
+command! evernote js evernote_doAction( document.popupNode, 'CLIP_ACTION_SELECTION' );
 command! execlip js util.readFromClipboard().split(/\n/).filter(function(v) v.trim().length).forEach(liberator.execute)
 command! -nargs=+ sitesearch :exe ":tabopen <args> site:" + content.document.domain
-command! -nargs=1 feed subscrfl -rate=<args>
+command! -nargs=1 feed subscrldr -rate=<args>
 command! ramen -nargs=1 delay -interval=<args>m namakubi できたぞ、くえよ、しぬぞ
 " 選択範囲内のリンクを開く
 command! sopen js [liberator.open(a.href, liberator.NEW_BACKGROUND_TAB) for (a in util.evaluateXPath("//a")) if (content.window.getSelection().containsNode(a, true))]
@@ -457,11 +550,13 @@ abbr -j .url        plugins.bitly.jmp(buffer.URL)
 abbr -j .tu         abbreviations.get(modes.INSERT, '.title').text + ' - ' + plugins.bitly.jmp(buffer.URL)
 abbr -j .impala     plugins.haneru.getc(buffer.URL)[0]
 
+abbr -j .song       let (song = plugins.mpdCurrentsong.API.getSongInfo()) <>{song.Title} / {song.Artist} #NowPlaying</>
+
 iabbr -j .cmdline   commandline.command
 
-cabbr -j .reply     let (e=doc.querySelector('.hentry.status'))('@' + e.getAttribute('class').match(/u-(\S+)/)[1] + '#' + e.getAttribute('id').match(/\d+/))
-cabbr -j .stid     let (e=doc.querySelector('.hentry.status'))(e.getAttribute('id').match(/\d+/))
-cabbr -j .rt        let (e=doc.querySelector('.hentry.status'))('RT @' + e.getAttribute('class').match(/u-(\S+)/)[1] + '#' + e.getAttribute('id').match(/\d+/) + ': ' + doc.querySelector('.entry-content').textContent.trim())
+cabbr -j .reply        let (d=doc.querySelector('[data-item-id][data-tweet-id]')) <>@{d.getAttribute('data-screen-name')}#{d.getAttribute('data-item-id')}</>
+cabbr -j .rt        let (d=doc.querySelector('[data-item-id][data-tweet-id]')) <>RT @{d.getAttribute('data-screen-name')}#{d.getAttribute('data-item-id')}</>
+
 
 cabbr -j .amazon    let(asin=content.document.getElementById('ASIN').value,base='http://amazon.jp/',res)['dp/','o/ASIN/','gp/product/'].some(function(it)((content.document.location.pathname.indexOf(it)>1)&&(res=base+it+asin)))&&res;
 

@@ -11,49 +11,69 @@
     alias
     appendAnchor
     asdfghjkl
+    auto-bookmark
     auto-focus-frame
     auto_detect_link
     auto_reload
     auto_source
+    !anti-auto-focus
     bitly
+    buffer-multiple-hints
     caret-hint
     commandBookmarklet
     copy
-    dc
+    !dc
+    direct_bookmark
     edit-vimperator-files
-    embed-esc
+    !embed-esc
+    epub-reader
+    erection
     every
     feedSomeKeys_3
+    forcefocuscontent
     gmail-commando
     google-plus-commando
+    google-results
     google-translator
     grep
     hatenaStar
-    hint-command
+    !happy_hacking_vimperator
     hint-tombloo
     hints-for-embedded
     hints-yank-paste
-    !liberator-overlay-ext
+    !hints-ext
+    ldc-completer
+    liberator-overlay-ext
     lo
+    longcat
     loginManager
     !maine_coon
     memo
     migemized_find
     migemo_completion
+
     migemo_hint
     multi-exec
     multi_requester
+    mpd-currentsong
+    microsoft-translator
+    my-style
     namakubi
+    nicolist
     option-selector
+    PDF.js
     pino
     prevent-pseudo-domain
     readitlater
+    refe
     sbmcommentsviewer
     !statstat
     statusbar_panel
     stella
+    slideshare
     subscldr
     !piyo-ui
+    tab-history
     tabsort
     tombloo
     twittperator
@@ -61,10 +81,15 @@
     usi
     video-controller
     walk-input
-    win-mouse
+    !win-mouse
     x-hint
     zoom-em-all
   </>.toString().split(/\s+/).filter(function(n) !/^!/.test(n));
+
+  if (liberator.has('Unix')) {
+    liberator.globalVariables.plugin_loader_plugins = liberator.globalVariables.plugin_loader_plugins.filter(function (n) n !== 'win-mouse');
+  }
+
   // }}}
 
   // Utils                                                                       {{{
@@ -147,6 +172,14 @@
   }
 
   // }}}
+
+  // OS Settings {{{
+  (function () {
+    if (liberator.has('Unix')) {
+      // ページキャッシュもあるし速度的には変化がないと思うが SSD に残っているのが嫌なので…
+      options.setPref('browser.cache.disk.parent_directory', '/tmp/firefox/default');
+    }
+  })(); // }}}
 
   // Copy commandline                                                            {{{
   mappings.addUserMap(
@@ -257,21 +290,18 @@
   }
   // }}}
 
-  // ScrapBook                                                                   {{{
+  if (1) { // ScrapBook                                                                   {{{
+    commands.addUserCommand(
+      ['scrap'],
+      'Scrap current page by Scrapbook',
+      function () ScrapBookBrowserOverlay.execCapture(0, null, false, "urn:scrapbook:root"),
+      {},
+      true
+    );
+  } // }}}
 
-  commands.addUserCommand(
-    ['scrap'],
-    'Scrap current page by Scrapbook',
-    function () ScrapBookBrowserOverlay.execCapture(0, null, false, "urn:scrapbook:root"),
-    {},
-    true
-  );
-
-  // }}}
-
-  // コマンドラインの ! をトグル {{{
-  // http://twitter.com/eagletmt/status/13462934115
-  if (1) {
+  if (1) { // コマンドラインの ! をトグル {{{
+    // http://twitter.com/eagletmt/status/13462934115
     mappings.addUserMap(
       [modes.COMMAND_LINE],
       ['<C-x>'],
@@ -285,8 +315,34 @@
   }
   // }}}
 
-  // abbreviation 略語機能を日本語区切りで使えるようにする {{{
-  if (1) {
+  if (1) { // コマンドラインの <C-a> を2段階移動にする {{{
+    mappings.addUserMap(
+      [modes.COMMAND_LINE],
+      ['<C-a>'],
+      'Go to head.',
+      function () {
+        let e = Editor.getEditor();
+        let m = e.value.match(/^\s*\S+\s/);
+
+        if (!m) {
+          editor.executeCommand("cmd_beginLine", 1);
+          return;
+        }
+
+        if (e.selectionStart <= m[0].length) {
+          editor.executeCommand("cmd_beginLine", 1);
+          return;
+        }
+
+        editor.executeCommand("cmd_beginLine", 1);
+        editor.executeCommand("cmd_wordNext", 1);
+        editor.executeCommand("cmd_charNext", 1);
+      },
+      {}
+    );
+  }//}}}
+
+  if (1) { // abbreviation 略語機能を日本語区切りで使えるようにする {{{
     // http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100430/1272628087
     // 一-龠 ァ-ヶ ー あ-ん 、。！？
     let nonkw = "\\s\"'\\u4e00-\\u9fa0\\u30A1-\\u30F6\\u30FC\\u3042-\\u3093\\u3001\\u3002\\uFF01\\uFF1F";
@@ -299,100 +355,98 @@
   }
   // }}}
 
-  // Copy.js                                                                     {{{
-  function shortAmazon () {
-    var asin = content.document.getElementById('ASIN').value;
-    var base = 'http://amazon.jp/';
-    var dirs = ['dp/', 'o/ASIN/', 'gp/product/'];
+  if (1) { // Copy.js                                                                 {{{
+    function shortAmazon () {
+      var asin = content.document.getElementById('ASIN').value;
+      var base = 'http://amazon.jp/';
+      var dirs = ['dp/', 'o/ASIN/', 'gp/product/'];
 
-    if (asin) {
-      for each (var it in dirs) {
-        if (content.document.location.pathname.indexOf(it) != 1)
-          return base + it + asin;
+      if (asin) {
+        for each (var it in dirs) {
+          if (content.document.location.pathname.indexOf(it) != 1)
+            return base + it + asin;
+        }
       }
     }
-  }
 
-  // for copy.js
-  liberator.globalVariables.copy_templates = [
-    {
-      label: 'bookmark',
-      value: "[%TITLE%]\n%URL%\n"
-    },
-    {
-      label: 'titleAndURL',
-      value: '%TITLE%\n%URL%\n'
-    },
-    {
-      label: 'title',
-      value: '%TITLE%'
-    },
-    {
-      label: 'hatena',
-      value: '[%URL%:title=%TITLE%]'
-    },
-    {
-      label: 'hatenacite',
-      value: '>%URL%:title=%TITLE%>\n%SEL%\n<<'
-    },
-    {
-      label: 'markdown',
-      value: '[%SEL%](%URL% "%TITLE%")'
-    },
-    {
-      label: 'htmlblockquote',
-      value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>'
-    },
-    {
-      label: 'amazon',
-      value: 'Short Amazon',
-      custom: shortAmazon
-    },
-    {
-      label: 'ASIN',
-      value: 'copy ASIN code from Amazon for Hatena',
-      custom: function() ('asin:'+content.document.getElementById('ASIN').value+':detail')
-    },
-    {
-      label: 'domain',
-      value: 'domain',
-      custom: function () content.document.domain.replace(/^[^.]+\.([^.]+\.([^.]{3}|[^.]{2}\.[^.]{2}))$/, '$1') },
-    {
-      label: 'nico',
-      value: 'for hatena diary',
-      custom: function () ('[niconico:'+buffer.URL.match(/[a-z]{2,3}\d+/)+']')
-    },
-    {
-      label: 'genkyu',
-      value: '><blockquote cite="%URL%" title="%TITLE%"><\n%SEL%\n></blockquote><'
-    },
-    {
-      label: 'hgenkyu',
-      value: '><blockquote cite="%URL%" title="%TITLE%"><\n%HTMLSEL%\n></blockquote><'
-    },
-    {
-      label: 'quoteWithTitleAndURL',
-      value: '\u3010%TITLE%\u3011\n%SEL%\n%URL%'
-    },
-    {
-      label: 'crchangeset',
-      value: 'http://coderepos.org/share/changeset/'
-    },
-    {
-      label: 'gogle',
-      value: 'gogle',
-      custom: function () JSON.parse(util.httpGet("http://ggl-shortener.appspot.com/?url="+encodeURIComponent(buffer.URL)).responseText).short_url
-    },
-    {
-      label: 'link',
-      value: '<a href="%URL%">%TITLE%</a>'
-    }
-  ];
+    // for copy.js
+    liberator.globalVariables.copy_templates = [
+      {
+        label: 'bookmark',
+        value: "[%TITLE%]\n%URL%\n"
+      },
+      {
+        label: 'titleAndURL',
+        value: '%TITLE%\n%URL%\n'
+      },
+      {
+        label: 'title',
+        value: '%TITLE%'
+      },
+      {
+        label: 'hatena',
+        value: '[%URL%:title=%TITLE%]'
+      },
+      {
+        label: 'hatenacite',
+        value: '>%URL%:title=%TITLE%>\n%SEL%\n<<'
+      },
+      {
+        label: 'markdown',
+        value: '[%SEL%](%URL% "%TITLE%")'
+      },
+      {
+        label: 'htmlblockquote',
+        value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>'
+      },
+      {
+        label: 'amazon',
+        value: 'Short Amazon',
+        custom: shortAmazon
+      },
+      {
+        label: 'ASIN',
+        value: 'copy ASIN code from Amazon for Hatena',
+        custom: function() ('asin:'+content.document.getElementById('ASIN').value+':detail')
+      },
+      {
+        label: 'domain',
+        value: 'domain',
+        custom: function () content.document.domain.replace(/^[^.]+\.([^.]+\.([^.]{3}|[^.]{2}\.[^.]{2}))$/, '$1') },
+      {
+        label: 'nico',
+        value: 'for hatena diary',
+        custom: function () ('[niconico:'+buffer.URL.match(/[a-z]{2,3}\d+/)+']')
+      },
+      {
+        label: 'genkyu',
+        value: '><blockquote cite="%URL%" title="%TITLE%"><\n%SEL%\n></blockquote><'
+      },
+      {
+        label: 'hgenkyu',
+        value: '><blockquote cite="%URL%" title="%TITLE%"><\n%HTMLSEL%\n></blockquote><'
+      },
+      {
+        label: 'quoteWithTitleAndURL',
+        value: '\u3010%TITLE%\u3011\n%SEL%\n%URL%'
+      },
+      {
+        label: 'crchangeset',
+        value: 'http://coderepos.org/share/changeset/'
+      },
+      {
+        label: 'gogle',
+        value: 'gogle',
+        custom: function () JSON.parse(util.httpGet("http://ggl-shortener.appspot.com/?url="+encodeURIComponent(buffer.URL)).responseText).short_url
+      },
+      {
+        label: 'link',
+        value: '<a href="%URL%">%TITLE%</a>'
+      }
+    ];
+  } // }}}
 
-  // }}}
-
-  // statstat {{{
-  if (1) {
+  if (0) { // statstat {{{
     liberator.globalVariables.statstat_expression =
       function() {
         try {
@@ -408,9 +462,7 @@
       }
   } // }}}
 
-  // mouse over hint mode                                                        {{{
-
-  if (1) {
+  if (1) { // mouse over hint mode                                                        {{{
     hints.addMode(
       'm',
       'mouse over',
@@ -428,18 +480,6 @@
       function () options.get('hinttags').get()
     );
   } // }}}
-
-  // numeronym {{{
-  commands.addUserCommand(
-    ['numeronym', 'numerorym', 'lotion', 'munemomym'],
-    'Nume Nume',
-    function (args) liberator.echo(let ([,a,b,c] = /^(.)(.+)(.)$/(args.literalArg.trim())) (a+b.length+c)),
-    {
-      literal: 0
-    },
-    true
-  );
-  // }}}
 
   if (1) { // Kill Menu Mode and shortcut keys on Hint mode {{{
     // imap されていないキーで無視したいものは、inoremap <C-n> <nop> などとしておく
@@ -468,56 +508,34 @@
       },
       false
     );
-  }
+  } // }}}
 
-  // }}}
+  if (1) { // auto_detect_link.js                                                         {{{
+    liberator.globalVariables.autoDetectLink = {
+      nextPatterns: [
+        //[NnＮｎ][EeＥｅ][XxＸｘ][TtＴｔ]/,
+        /[Nn\uff2e\uff4e][Ee\uff25\uff45][Xx\uff38\uff58][Tt\uff34\uff54]/,
+        //[FfＦｆ](?:[OoＯｏ][RrＲｒ])?[WwＷｗ](?:[AaＡａ][RrＲｒ])?[DdＤｄ]/,
+        /[Ff\uff26\uff46](?:[Oo\uff2f\uff4f][Rr\uff32\uff52])?[Ww\uff37\uff57](?:[Aa\uff21\uff41][Rr\uff32\uff52])?[Dd\uff24\uff44]/,
+        //^\s*(?:次|つぎ)[への]/, /つづく|続/, /(?:[^目]|^)次|つぎ/, /進む/,
+        /^\s*(?:\u6B21|\u3064\u304E)[\u3078\u306E]/, /\u3064\u3065\u304F|\u7D9A/, /(?:[^\u76EE]|^)\u6B21|\u3064\u304E/, /\u9032\u3080/,
+        //^\s*>\s*$/, />+|≫/
+        /^\s*>\s*$/, />+|\u226b/
+      ],
+      backPatterns: [
+        //[BbＢｂ][AaＡａ][CcＣｃ][KkＫｋ]/, /[PpＰｐ][RrＲｒ][EeＥｅ][VvＶｖ]/,
+        /[Bb\uff22\uff42][Aa\uff21\uff41][Cc\uff23\uff43][Kk\uff2b\uff4b]/, /[Pp\uff30\uff50][Rr\uff32\uff52][Ee\uff25\uff45][Vv\uff36\uff56]/,
+        //^\s*前[への]/, /前/, /戻る/,
+        /^\s*\u524d[\u3078\u306e]/, /\u524d/, /\u623b\u308b/,
+        //^\s*<\s*$/, /<+|≪/
+        /^\s*<\s*$/, /<+|\u226a/
+      ],
+      force: true,
+      clickButton: true,
+    };
+  } // }}}
 
-  // auto_detect_link.js                                                         {{{
-
-  liberator.globalVariables.autoDetectLink = {
-    nextPatterns: [
-      //[NnＮｎ][EeＥｅ][XxＸｘ][TtＴｔ]/,
-      /[Nn\uff2e\uff4e][Ee\uff25\uff45][Xx\uff38\uff58][Tt\uff34\uff54]/,
-      //[FfＦｆ](?:[OoＯｏ][RrＲｒ])?[WwＷｗ](?:[AaＡａ][RrＲｒ])?[DdＤｄ]/,
-      /[Ff\uff26\uff46](?:[Oo\uff2f\uff4f][Rr\uff32\uff52])?[Ww\uff37\uff57](?:[Aa\uff21\uff41][Rr\uff32\uff52])?[Dd\uff24\uff44]/,
-      //^\s*(?:次|つぎ)[への]/, /つづく|続/, /(?:[^目]|^)次|つぎ/, /進む/,
-      /^\s*(?:\u6B21|\u3064\u304E)[\u3078\u306E]/, /\u3064\u3065\u304F|\u7D9A/, /(?:[^\u76EE]|^)\u6B21|\u3064\u304E/, /\u9032\u3080/,
-      //^\s*>\s*$/, />+|≫/
-      /^\s*>\s*$/, />+|\u226b/
-    ],
-    backPatterns: [
-      //[BbＢｂ][AaＡａ][CcＣｃ][KkＫｋ]/, /[PpＰｐ][RrＲｒ][EeＥｅ][VvＶｖ]/,
-      /[Bb\uff22\uff42][Aa\uff21\uff41][Cc\uff23\uff43][Kk\uff2b\uff4b]/, /[Pp\uff30\uff50][Rr\uff32\uff52][Ee\uff25\uff45][Vv\uff36\uff56]/,
-      //^\s*前[への]/, /前/, /戻る/,
-      /^\s*\u524d[\u3078\u306e]/, /\u524d/, /\u623b\u308b/,
-      //^\s*<\s*$/, /<+|≪/
-      /^\s*<\s*$/, /<+|\u226a/
-    ],
-    force: true,
-    clickButton: true,
-  };
-
-  // }}}
-
-  // Readability {{{
-  if (0) {
-    let readability = function () { /// {{{
-      liberator.open("javascript:(function(){readStyle='style-apertura';readSize='size-large';readMargin='margin-narrow';_readability_script=document.createElement('SCRIPT');_readability_script.type='text/javascript';_readability_script.src='http://lab.arc90.com/experiments/readability/js/readability.js?x='+(Math.random());document.getElementsByTagName('head')[0].appendChild(_readability_script);_readability_css=document.createElement('LINK');_readability_css.rel='stylesheet';_readability_css.href='http://lab.arc90.com/experiments/readability/css/readability.css';_readability_css.type='text/css';_readability_css.media='all';document.getElementsByTagName('head')[0].appendChild(_readability_css);_readability_print_css=document.createElement('LINK');_readability_print_css.rel='stylesheet';_readability_print_css.href='http://lab.arc90.com/experiments/readability/css/readability-print.css';_readability_print_css.media='print';_readability_print_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_print_css);})();");
-    }; // }}}
-
-    commands.addUserCommand(
-      'readability',
-      'readability bookmarklet',
-      function () {
-        readability();
-      },
-      {}
-    );
-  }
-  // }}}
-
-  //ブックマークキーワードを展開 {{{
-  if (1) {
+  if (1) { //ブックマークキーワードを展開 {{{
     mappings.addUserMap(
       [modes.COMMAND_LINE],
       ['<C-o>'],
@@ -528,8 +546,7 @@
     );
   } // }}}
 
-  // Download Toolbar のクリア {{{
-  if (1) {
+  if (1) { // Download Toolbar のクリア {{{
     commands.addUserCommand(
       ['dltbc'],
       'Clear download toolbar',
@@ -541,8 +558,7 @@
     );
   } // }}}
 
-  // 上のウィンドウにフォーカスを移動 {{{
-  if (1) {
+  if (1) { // 親ウィンドウ(フレーム)にフォーカスを移動 {{{
     //let map = mappings.getDefault(modes.NORMAL, '<ESC>');
     mappings.addUserMap(
       [modes.NORMAL],
@@ -557,8 +573,7 @@
     );
   } // }}}
 
-  // コマンドラインをエディタで編集 {{{
-  if (1) {
+  if (1) { // コマンドラインをエディタで編集 {{{
     mappings.addUserMap(
       [modes.COMMAND_LINE],
       ['<C-i>'],
@@ -576,8 +591,7 @@
     );
   } // }}}
 
-  // サイト内検索 {{{
-  if (1) {
+  if (1) { // サイト内検索 {{{
     commands.addUserCommand(
       ['sitesearch'],
       'Search in this site',
@@ -598,7 +612,7 @@
     );
   } // }}}
 
-  if (1) { // win-mouse なヒント追加 {{{
+  if (1 && liberator.has('Windows')) { // win-mouse なヒント追加 {{{
     hints.addMode(
       'w',
       'Move cursor',
@@ -651,6 +665,74 @@
       },
       {},
       true
+    );
+  } // }}}
+
+  if (1) { // Reblog from All Tabs {{{
+    commands.addUserCommand(
+      ['reblogall'],
+      'reblog all',
+      function() {
+        var itab=0;
+        var ntab=tabs.count;
+        liberator.echo(ntab);
+        for(itab=0;itab<ntab;itab++){
+          if(plugins.libly.$U.getFirstNodeFromXPath('//*[@id="tumblr_controls"]')){
+            //reblog and close
+            liberator.echo('rebloging',itab);
+            liberator.execute('tombloo ReBlog\ -\ Tumblr');
+            liberator.sleep(1000);
+            liberator.execute('tabclose');
+          }else{
+            //next tab
+            //liberator.echo('no reblog');
+            liberator.execute('tabnext');
+          }
+        }
+      }
+    );
+  }// }}}
+
+  if (1) { // <Esc> でコマンドラインをキャンセルしても履歴を保存する {{{
+    mappings.addUserMap(
+      [modes.COMMAND_LINE],
+      ['<Esc>'],
+      'I wish to escape to the blue sky.',
+      (function () {
+        if (this._history && this._history.save)
+          this._history.save();
+        events.onEscape();
+      }).bind(commandline),
+      {}
+    );
+  } // }}}
+
+  if (1) { // 画像表示オプション (set image) {{{
+    options.add(
+      ['image'],
+      'Image display options',
+      'number',
+      1,
+      {
+        scope: Option.SCOPE_GLOBAL,
+        setter: function (value) {
+          options.setPref('permissions.default.image', value);
+          return value;
+        },
+        getter: function (value) {
+          return options.getPref('permissions.default.image');
+        },
+        completer: function () {
+          return [
+            [1, 'Allow all images to load, regardless of origin'],
+            [2, 'Block all images from loading.'],
+            [3, 'Prevent third-party images from loading.']
+          ];
+        },
+        validator: function (value) {
+          return (1 <= value) && (value <= 3);
+        }
+      }
     );
   } // }}}
 
