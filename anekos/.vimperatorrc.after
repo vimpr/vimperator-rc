@@ -5,6 +5,7 @@ alias e echo
 alias ri reloadimage
 alias vc videocontrol
 alias p panorama
+alias tm tabmove
 
 " }}}
 
@@ -18,17 +19,17 @@ set gui=addons,tabs
 " feedSomeKeys_3                                                             {{{
 
 " GMail
-fmaps -u='mail\.google\.com/mail' -events=vkeydown,keypress,vkeyup j k
-fmaps -u='mail\.google\.com/mail' c n p o u x s r a ? gi gs gt gd ga gc I
-fmaps -u='mail\.google\.com/mail' -p=<Leader> d,# s,! e
-fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' c j,n k,p n,j p,k o u x s r a ? gi gs gt gd ga gc
-fmaps -u='mail\.google\.com/mail/.*/[0-9a-f]+$' -p=<Leader> d,# s,! e
+fmaps -u='^https://mail\.google\.com/mail' -frame=4 -events=vkeydown,keypress,vkeyup j k
+fmaps -u='^https://mail\.google\.com/mail' -frame=4 c n p o u x s r a ? gi gs gt gd ga gc gl I
+fmaps -u='^https://mail\.google\.com/mail' -frame=4 -p=<Leader> d,# s,! e
+fmaps -u='^https://mail\.google\.com/mail/.*/[0-9a-f]+$' -frame=4 c j,n k,p n,j p,k o u x s r a ? gi gs gt gd ga gc
+fmaps -u='^https://mail\.google\.com/mail/.*/[0-9a-f]+$' -frame=4 -p=<Leader> d,# s,! e
 
 " GReader
 fmaps -u='www\.google\.co\.jp/reader' -events=vkeypress j k n p m s v A r S N P X O gh ga gs gt gu u / ? J K
 
 " LDR
-fmaps -u='(fastladder|livedoor)\.com/reader' j k s a p o v c i,p <Space> <S-Space> z < > e,g
+fmaps -u='(fastladder|livedoor)\.com/reader' j k s a p o c <Space> <S-Space> z < > e,g
 fmaps -u='(fastladder|livedoor)\.com/reader' q w
 
 " Google Code
@@ -50,8 +51,19 @@ fmaps -urls='^https?://twitter\.com/' -events=keydown c,<Esc>
 " INSERT
 fmaps -modes=i -events=keypress,keydown <C-p>,<Up> <C-n>,<Down>
 
+" epub reader
+fmaps -urls '^chrome://epubreader/content/reader\.xul' -frame 1 -events keydown j,<Right> k,<Left> <Del>
+fmaps -urls '^chrome://epubreader/content/reader\.xul' -frame 1 -events vkeydown c D s
+nnoremap -urls '^chrome://epubreader/content/reader\.xul' o :epubreader<Space>
+
+" PinCat
+fmaps -urls='^http://pincat\.kazlab\.org/' -events=keypress h j k l <CR> i p t <ESC>
+
+
 " }}}
 
 " set {{{
-set complete=sl
+
+set complete=Lsl
+
 " }}}
