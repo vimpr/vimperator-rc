@@ -290,8 +290,8 @@ js <<EOM
 gBrowser.addTab = liberator.eval(
     '(' +
     gBrowser.addTab.toSource()
-            .replace(/var aRelatedToCurrent;/, 'var aRelatedToCurrent = true;')
-            .replace(/aRelatedToCurrent = params\.relatedToCurrent;/, 'aRelatedToCurrent = params.relatedToCurrent === undefined ? true : params.relatedToCurrent;') +
+            .replace(/var\s*aRelatedToCurrent;/, 'var aRelatedToCurrent = true;')
+            .replace(/aRelatedToCurrent\s*=\s*params\.relatedToCurrent;/, 'aRelatedToCurrent = params.relatedToCurrent === undefined ? true : params.relatedToCurrent;') +
     ')',
     gBrowser.addTab);
 EOM
