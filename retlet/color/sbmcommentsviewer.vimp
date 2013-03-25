@@ -1,18 +1,20 @@
-"hi CompGroup.liberator-sbmcommentsviewer padding: 10px 20px; font-size: 13px; background-color: #f9f9f9
-"hi CompGroup.liberator-sbmcommentsviewer>div -moz-box-sizing: border-box; background-color: #fff;
-"hi CompGroup.liberator-sbmcommentsviewer>div:not(:first-child) position: relative; padding-left: 20px;
-"hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-id>img position: absolute; left: -16px; margin: 0;
-"hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-timestamp opacity: .6; font-size: smaller;
-"hi CompGroup.liberator-sbmcommentsviewer>div>:last-child margin-right: 0;
-
 hi Message padding-left: 0; text-indent: 0;
 
 hi CompGroup.liberator-sbmcommentsviewer <<EOM
   font-size: 14px;
-  background-color: #f9f9f9;
+  background-color: #f2f8fe;
 EOM
 
-hi CompGroup.liberator-sbmcommentsviewer>:not(:first-child) <<EOM
+hi CompGroup.liberator-sbmcommentsviewer>div>[liberator|highlight~="CompTitle"]>[liberator|highlight~="CompResult"] <<EOM
+  width: auto;
+EOM
+
+hi CompGroup.liberator-sbmcommentsviewer>div>[liberator|highlight~="CompTitle"]>[liberator|highlight~="CompDesc"] <<EOM
+  display: none;
+EOM
+
+hi CompGroup.liberator-sbmcommentsviewer>div.liberator-sbmcommentsviewer-content <<EOM
+  -moz-box-sizing: border-box;
 EOM
 
 hi CompGroup.liberator-sbmcommentsviewer>div>span <<EOM
@@ -26,11 +28,22 @@ hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-id <<E
   text-align: right;
 EOM
 
+hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-tags <<EOM
+  white-space: normal;
+EOM
+
+hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-comment <<EOM
+  margin-right: 5px;
+  padding-right: 5px;
+EOM
+
 hi CompGroup.liberator-sbmcommentsviewer>div>.liberator-sbmcommentsviewer-timestamp <<EOM
   opacity: .6;
   font-size: smaller;
+  white-space: normal;
 EOM
 
 hi CompGroup.liberator-sbmcommentsviewer>div>:last-child <<EOM
+  margin-right: 0;
   padding-right: 0;
 EOM

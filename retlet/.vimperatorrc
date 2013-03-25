@@ -103,7 +103,7 @@ command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
 " plugins
 " ======================================================================
 " plugin_loader.js
-let g:plugin_loader_roots = "~/Dropbox/repository/vimpr/vimperator-plugins/ ~/.vimperator/load/"
+let g:plugin_loader_roots = "~/Dropbox/repos/vimpr/vimperator-plugins/ ~/.vimperator/load/"
 let g:plugin_loader_plugins = "_libly,account_switcher,appendAnchor,auto_reload,copy,direct_bookmark,feedSomeKeys_3,hatenaStar,multi_requester,pino,sbmcommentsviewer,tombloo,walk-input,stella,opener,bitly,x-hint,auto_source,reload-image,loginManager,statusline-toolbar,migemo_completion,hint-tombloo-mod,caret-hint,prevent-pseudo-domain,lo,liberator-overlay-ext,auto-bookmark,QB,hint-ext,commandBookmarklet,nicolist"
 
 " nicolist
@@ -258,9 +258,10 @@ let g:hint_tombloo_key = 'r'
 
 " ウェブサービス最適化
 " feedSomeKeys_3.js, tombloo.js, x-hint.js
+lazy fmaps -e=vkeydown -u='^https://www\.google\.(co\.jp|com)/search\?q=' j k 
 lazy fmaps -u='^https?://mail\.google\.com/(mail|a)/' c j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
 lazy fmaps -u='^http://b\.hatena\.ne\.jp/(?!(entry|articles|guide))' j k o,oj e a,b
-lazy fmaps -e=vkeydown -u='^http://www\.tumblr\.com/' j k r,t q p n L,l<CR>
+lazy fmaps -e=vkeydown -u='^http://www\.tumblr\.com/' j k r,h q p n L,l <S-e>
 lazy fmaps -u='^http://reader\.livedoor\.com/reader/' j k s a p v z <S-z> ,r,r < > o,vj J,<Space> K,<S-Space> q w g
 nnoremap -u='^http://reader\.livedoor\.com/reader/' b :tombloo Link - LDR<CR>
 nnoremap -u='^http://reader\.livedoor\.com/reader/' B :tombloo! Link - LDR<CR>
@@ -340,11 +341,9 @@ silent qmark r recss
 " style
 " ======================================================================
 color hint
-style -name liberator-statusline chrome://* #liberator-statusline, #liberator-commandline { -moz-box-align: center; }
 
 " toolbarbutton
-" style -name liberator-customize-toolbar chrome://* #liberator-customize-toolbar { -moz-appearance: none !important; }
-style -name toolbarbutton-feed-icon chrome://* #liberator-customize-toolbar > #feed-button { border: none !important; background: none !important; min-width: 0 !important; padding: 0 !important; }
+style -name toolbarbutton-feed-icon chrome://* #liberator-customize-toolbar > #feed-button { -moz-appearance: none !important; }
 
 " ex mode時IMEをOFF
 style -name commandline-ime chrome://* #liberator-commandline-command input { ime-mode: inactive; }
@@ -354,7 +353,6 @@ style -name ad-hide * .fast-hidden { display: none; }
 
 " imgsize fix
 style -name ldr-imgsize-fix http://reader.livedoor.com/reader/ .body img { max-width: 600px; max-height: 600px; }
-style -name fastladder-imgsize-fix http://fastladder.com/reader/ .body img { max-width: 600px; max-height: 600px; }
 
 " 安全なLDR
 style -name ldr-businessstyle http://reader.livedoor.com/reader/ <<EOM
